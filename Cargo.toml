@@ -1,13 +1,13 @@
 [package]
-name = "ldtk"
+name = "ldtk_rust"
 version = "0.1.0"
 authors = ["Blake Ellis <blake@commercev3.com>"]
 edition = "2018"
 license = "MIT"
 description = ""
-homepage = "https://github.com/estivate/ldtk"
-documentation = "https://github.com/estivate/ldtk"
-repository = "https://github.com/estivate/ldtk"
+homepage = "https://github.com/estivate/ldtk_rust"
+documentation = "https://github.com/estivate/ldtk_rust"
+repository = "https://github.com/estivate/ldtk_rust"
 readme = "README.md"
 keywords = ["ldtk", "game dev"]
 categories = ["games", "integrations"]

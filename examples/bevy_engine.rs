@@ -1,6 +1,7 @@
 use bevy::prelude::*;
 use bevy::render::pass::ClearColor;
-use ldtk::{self, LdtkFile};
+use ldtk_rust::LdtkFile;
+
 use std::collections::HashMap;
 
 fn main() {
@@ -22,7 +23,7 @@ fn setup(
     mut texture_atlases: ResMut<Assets<TextureAtlas>>,
 ) {
     // load & parse the LDtk JSON file
-    let ldtk = ldtk::new_from_file("assets/AutoLayers_1_basic.ldtk".to_string());
+    let ldtk = ldtk_rust::new_from_file("assets/AutoLayers_1_basic.ldtk".to_string());
 
     // now set up the tile assets
     let mut texture_atlas_handles: HashMap<i32, Handle<TextureAtlas>> = HashMap::new();
