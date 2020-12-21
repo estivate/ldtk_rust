@@ -23,7 +23,10 @@ fn setup(
     mut texture_atlases: ResMut<Assets<TextureAtlas>>,
 ) {
     // load & parse the LDtk JSON file
-    let ldtk = ldtk_rust::new_from_file("assets/AutoLayers_1_basic.ldtk".to_string());
+    let mut ldtk = ldtk_rust::new_from_file("assets/AutoLayers_1_basic.ldtk".to_string());
+
+    // the redraw field gives us some control on when to spawn
+    ldtk.redraw = true;
 
     // now set up the tile assets
     let mut texture_atlas_handles: HashMap<i32, Handle<TextureAtlas>> = HashMap::new();
@@ -53,9 +56,13 @@ fn setup(
 
 fn update(
     commands: &mut Commands,
-    ldtk: ResMut<LdtkFile>,
+    mut ldtk: ResMut<LdtkFile>,
     handles: Res<HashMap<i32, Handle<TextureAtlas>>>,
 ) {
+    if !ldtk.redraw {
+        return;
+    }
+
     let tile_scale = 3.0;
     commands.spawn(Camera2dBundle::default());
     for level in ldtk.levels.iter() {
@@ -88,6 +95,7 @@ fn update(
             }
         }
     }
+    ldtk.redraw = false;
 }
 
 // LDtk provides pixel locations starting in the top left. For Bevy we need to

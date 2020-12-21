@@ -19,4 +19,6 @@ pub struct LdtkFile {
     pub world_grid_height: i32,
     pub defs: Defs,
     pub levels: Vec<Level>,
+    #[serde(skip)]
+    pub redraw: bool,
 }
