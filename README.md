@@ -24,7 +24,7 @@ fn main() {
 }
 ```
 
-## Using with [Bevy Engine](https:://bevyengine.org/)
+## Using with [Bevy Engine](https://bevyengine.org/)
 
 An example running in Bevy 0.4 is included in the [examples](examples/) directory.
 In a startup system you can read in the LDtk JSON and load all the tile assets. Then
