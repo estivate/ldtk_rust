@@ -21,13 +21,10 @@ fn setup(
     asset_server: Res<AssetServer>,
     mut texture_atlases: ResMut<Assets<TextureAtlas>>,
 ) {
-    // when starting up we need to read in the json file from ldtk
-    // and instantiate the LdtkFile struct. We can then add this
-    // struct as a bevy resource, or we can tease out certain areas
-    // of data and add them as resources.
+    // load & parse the LDtk JSON file
     let ldtk = ldtk::new_from_file("assets/AutoLayers_1_basic.ldtk".to_string());
 
-    // we also need to load each tileset asset into bevy
+    // now set up the tile assets
     let mut texture_atlas_handles: HashMap<i32, Handle<TextureAtlas>> = HashMap::new();
     for tileset in ldtk.defs.tilesets.iter() {
         // load the asset
@@ -47,7 +44,7 @@ fn setup(
         texture_atlas_handles.insert(tileset.uid, texture_atlas_handle);
     }
 
-    // add all the things
+    // add the LDtk object and the tile assets as resources
     commands
         .insert_resource(ldtk)
         .insert_resource(texture_atlas_handles);
@@ -92,6 +89,8 @@ fn update(
     }
 }
 
+// LDtk provides pixel locations starting in the top left. For Bevy we need to
+// flip the Y axis and offset from the center of the screen.
 fn convert_to_world(width: f32, height: f32, scale: f32, x: i32, y: i32) -> Vec3 {
     let world_x = (x as f32 * scale) - (width / 2.);
     let world_y = -(y as f32 * scale) + (height / 2.);
