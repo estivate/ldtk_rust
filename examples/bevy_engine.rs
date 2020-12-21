@@ -1,14 +1,14 @@
 use bevy::prelude::*;
 use bevy::render::pass::ClearColor;
-use ldtk::{self, Project};
+use ldtk::{self, LdtkFile};
 use std::collections::HashMap;
 
 fn main() {
     App::build()
         .add_resource(WindowDescriptor {
             title: "title".to_string(),
-            width: 1024,
-            height: 768,
+            width: 1024.0,
+            height: 768.0,
             ..Default::default()
         })
         .add_plugins(DefaultPlugins)
@@ -17,7 +17,7 @@ fn main() {
         .run();
 }
 fn setup(
-    mut commands: Commands,
+    commands: &mut Commands,
     asset_server: Res<AssetServer>,
     mut texture_atlases: ResMut<Assets<TextureAtlas>>,
 ) {
@@ -25,7 +25,7 @@ fn setup(
     // and instantiate an LdtkProject struct. We can then add this
     // struct as a bevy resource, or we can tease out certain areas
     // of data and add them as resources.
-    let ldtk = Project::new_from_file("assets/AutoLayers_1_basic.ldtk".to_string());
+    let ldtk = ldtk::new_from_file("assets/AutoLayers_1_basic.ldtk".to_string());
 
     // we also need to load each tileset asset into bevy
     let mut texture_atlas_handles: HashMap<i32, Handle<TextureAtlas>> = HashMap::new();
@@ -54,16 +54,12 @@ fn setup(
 }
 
 fn update(
-    mut commands: Commands,
-    mut ldtk: ResMut<Project>,
+    commands: &mut Commands,
+    mut ldtk: ResMut<LdtkFile>,
     handles: Res<HashMap<i32, Handle<TextureAtlas>>>,
 ) {
-    if !ldtk.redraw {
-        return;
-    }
-
     let tile_scale = 3.0;
-    commands.spawn(Camera2dComponents::default());
+    commands.spawn(Camera2dBundle::default());
     for level in ldtk.levels.iter() {
         commands.insert_resource(ClearColor(Color::hex(&level.__bg_color[1..]).unwrap()));
         for layer in level.layer_instances.iter() {
@@ -74,7 +70,7 @@ fn update(
                 let layer_width = layer.__c_wid as f32 * (layer.__grid_size as f32 * tile_scale);
                 let layer_height = layer.__c_hei as f32 * (layer.__grid_size as f32 * tile_scale);
                 for tile in layer.auto_layer_tiles.iter() {
-                    commands.spawn(SpriteSheetComponents {
+                    commands.spawn(SpriteSheetBundle {
                         transform: Transform {
                             translation: convert_to_world(
                                 layer_width,
@@ -94,8 +90,6 @@ fn update(
             }
         }
     }
-
-    ldtk.redraw = false;
 }
 
 fn convert_to_world(width: f32, height: f32, scale: f32, x: i32, y: i32) -> Vec3 {
