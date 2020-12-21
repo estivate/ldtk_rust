@@ -22,7 +22,7 @@ fn setup(
     mut texture_atlases: ResMut<Assets<TextureAtlas>>,
 ) {
     // when starting up we need to read in the json file from ldtk
-    // and instantiate an LdtkProject struct. We can then add this
+    // and instantiate the LdtkFile struct. We can then add this
     // struct as a bevy resource, or we can tease out certain areas
     // of data and add them as resources.
     let ldtk = ldtk::new_from_file("assets/AutoLayers_1_basic.ldtk".to_string());
