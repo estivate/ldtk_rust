@@ -4,15 +4,13 @@ version = "0.1.0"
 authors = ["Blake Ellis <blake@commercev3.com>"]
 edition = "2018"
 license = "MIT"
-description = ""
+description = "Use the LDtk 2D level editor to build games in Rust."
 homepage = "https://github.com/estivate/ldtk_rust"
 documentation = "https://github.com/estivate/ldtk_rust"
 repository = "https://github.com/estivate/ldtk_rust"
 readme = "README.md"
 keywords = ["ldtk", "game dev"]
 categories = ["games", "integrations"]
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 serde = {version = "1.0", features = ["derive"]}

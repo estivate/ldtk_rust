@@ -3,7 +3,7 @@
 //!
 //! Here are a few ways to start:
 //!
-//! * type this and experiment: let ldtk = ldtk::Project::new_from_file("/path/to/file.ldtk");
+//! * type this and experiment: let ldtk = ldtk_rust::new_from_file("/path/to/file.ldtk");
 //! * /examples ~ check this directory for example code and [there you go | voilà | Bob's your uncle];
 //! * /README.md ~ a bit more descriptive intro with links to resources
 //!
@@ -28,7 +28,7 @@ pub use ldtk_file::LdtkFile;
 ///
 /// fn main() {
 ///   let file_path = "assets/AutoLayers_1_basic.ldtk".to_string();
-///   let ldtk = ldtk::new_from_file(file_path);
+///   let ldtk = ldtk_rust::new_from_file(file_path);
 ///   println!("First level pixel height is {}!", ldtk.levels[0].px_hei);
 /// }
 /// ```
