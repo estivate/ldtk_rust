@@ -52,7 +52,7 @@ fn setup(
 
 fn update(
     commands: &mut Commands,
-    mut ldtk: ResMut<LdtkFile>,
+    ldtk: ResMut<LdtkFile>,
     handles: Res<HashMap<i32, Handle<TextureAtlas>>>,
 ) {
     let tile_scale = 3.0;
