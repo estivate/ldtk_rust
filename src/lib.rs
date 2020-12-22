@@ -3,7 +3,7 @@
 //!
 //! Here are a few ways to start:
 //!
-//! * type this and experiment: let ldtk = ldtk_rust::new_from_file("/path/to/file.ldtk");
+//! * type this and experiment: let ldtk = LdtkFile::new("/path/to/file.ldtk");
 //! * /examples ~ check this directory for example code and [there you go | voilà | Bob's your uncle];
 //! * /README.md ~ a bit more descriptive intro with links to resources
 //!
@@ -11,32 +11,5 @@
 mod defs;
 pub mod ldtk_file;
 mod levels;
-use std::{fs::File, path::Path};
 
 pub use ldtk_file::LdtkFile;
-
-/// Takes a path to an LDtk file and returns a rust struct
-/// of the parsed JSON. It will mirror the original JSON
-/// structure for the most part, but with CamelCase names
-/// converted to their idiomatic rust counterparts (for
-/// instance, "jsonVersion" will become "json_version").
-///
-/// # Example
-///
-/// ```
-/// extern crate ldtk;
-///
-/// fn main() {
-///   let file_path = "assets/AutoLayers_1_basic.ldtk".to_string();
-///   let ldtk = ldtk_rust::new_from_file(file_path);
-///   println!("First level pixel height is {}!", ldtk.levels[0].px_hei);
-/// }
-/// ```
-///
-///
-pub fn new_from_file(f: String) -> LdtkFile {
-    let json_file_path = Path::new(&f);
-    let file = File::open(json_file_path).expect("file not found");
-    let o: LdtkFile = serde_json::from_reader(file).expect("error while reading");
-    o
-}

@@ -66,8 +66,8 @@ pub struct FieldDefs {
     #[serde(rename = "__type")]
     pub __type: String,
     pub uid: i32,
-    #[serde(rename = "type")]
-    pub field_def_type: String,
+    // #[serde(rename = "type")]
+    //pub field_def_type: String, // this can be string OR object?!
     pub is_array: bool,
     pub can_be_null: bool,
     pub array_min_length: Option<i32>,

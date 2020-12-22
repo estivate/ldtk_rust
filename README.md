@@ -12,9 +12,9 @@ It should be usable in any Rust game framework.
 
 ## Status
 
-Currently the LDtk sample files appear to load without errors, but it's early. 
-Most everything is untested and types and functionality are likely to change.
-Code review and more examples are welcomed.
+Currently the LDtk sample AutoLayer files 1-4 load without error, working on
+testing the rest of the samples. Bevy example displays autotiles but not entities.
+API, types and more all in flux still...
 
 ## Getting Started
 

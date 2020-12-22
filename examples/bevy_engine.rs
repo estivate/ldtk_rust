@@ -23,7 +23,7 @@ fn setup(
     mut texture_atlases: ResMut<Assets<TextureAtlas>>,
 ) {
     // load & parse the LDtk JSON file
-    let mut ldtk = ldtk_rust::new_from_file("assets/AutoLayers_1_basic.ldtk".to_string());
+    let mut ldtk = LdtkFile::new("assets/Test_file_for_API_showing_all_features.ldtk".to_string());
 
     // the redraw field gives us some control on when to spawn
     ldtk.redraw = true;
@@ -69,9 +69,10 @@ fn update(
         commands.insert_resource(ClearColor(Color::hex(&level.__bg_color[1..]).unwrap()));
         for layer in level.layer_instances.iter() {
             if layer.__type == "IntGrid" || layer.__type == "AutoLayer" {
-                let tileset_uid = layer
-                    .__tileset_def_uid
-                    .expect("No uid for tileset in IntGrid");
+                let tileset_uid = match layer.__tileset_def_uid {
+                    Some(uid) => uid,
+                    None => continue,
+                };
                 let layer_width = layer.__c_wid as f32 * (layer.__grid_size as f32 * tile_scale);
                 let layer_height = layer.__c_hei as f32 * (layer.__grid_size as f32 * tile_scale);
                 for tile in layer.auto_layer_tiles.iter() {
