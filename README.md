@@ -25,7 +25,7 @@ populate a struct that closely resembles the [LDtk JSON format](https://ldtk.io/
 use ldtk_rust::LdtkFile;
 
 fn main() {
-    let file_path = "assets/assets/AutoLayers_1_basic.ldtk".to_string();
+    let file_path = "assets/AutoLayers_4_Advanced.ldtk".to_string();
     let ldtk = LdtkFile::new(file_path);
     println!("First level pxHei is {}!", ldtk.levels[0].px_hei);
 }
