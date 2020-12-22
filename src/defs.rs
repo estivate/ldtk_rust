@@ -19,7 +19,7 @@ pub struct Layer {
     pub layer_type: String,
     pub uid: i32,
     pub grid_size: i32,
-    pub display_opacity: i32,
+    pub display_opacity: f32,
     pub px_offset_x: i32,
     pub px_offset_y: i32,
     //int_grid_values: UNUSED?
