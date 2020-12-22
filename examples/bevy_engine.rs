@@ -23,7 +23,7 @@ fn setup(
     mut texture_atlases: ResMut<Assets<TextureAtlas>>,
 ) {
     // load & parse the LDtk JSON file
-    let mut ldtk = LdtkFile::new("assets/Test_file_for_API_showing_all_features.ldtk".to_string());
+    let mut ldtk = LdtkFile::new("assets/AutoLayers_4_Advanced.ldtk".to_string());
 
     // the redraw field gives us some control on when to spawn
     ldtk.redraw = true;
@@ -63,35 +63,36 @@ fn update(
         return;
     }
 
-    let tile_scale = 3.0;
+    let tile_scale = 2.5;
     commands.spawn(Camera2dBundle::default());
     for level in ldtk.levels.iter() {
         commands.insert_resource(ClearColor(Color::hex(&level.__bg_color[1..]).unwrap()));
         for layer in level.layer_instances.iter() {
             if layer.__type == "IntGrid" || layer.__type == "AutoLayer" {
-                let tileset_uid = match layer.__tileset_def_uid {
-                    Some(uid) => uid,
-                    None => continue,
-                };
-                let layer_width = layer.__c_wid as f32 * (layer.__grid_size as f32 * tile_scale);
-                let layer_height = layer.__c_hei as f32 * (layer.__grid_size as f32 * tile_scale);
-                for tile in layer.auto_layer_tiles.iter() {
-                    commands.spawn(SpriteSheetBundle {
-                        transform: Transform {
-                            translation: convert_to_world(
-                                layer_width,
-                                layer_height,
-                                tile_scale,
-                                tile.px[0],
-                                tile.px[1],
-                            ),
-                            scale: Vec3::splat(tile_scale),
+                let tileset_uid = layer.__tileset_def_uid.unwrap_or(-1);
+                if tileset_uid >= 0 {
+                    let layer_width =
+                        layer.__c_wid as f32 * (layer.__grid_size as f32 * tile_scale);
+                    let layer_height =
+                        layer.__c_hei as f32 * (layer.__grid_size as f32 * tile_scale);
+                    for tile in layer.auto_layer_tiles.iter() {
+                        commands.spawn(SpriteSheetBundle {
+                            transform: Transform {
+                                translation: convert_to_world(
+                                    layer_width,
+                                    layer_height,
+                                    tile_scale,
+                                    tile.px[0],
+                                    tile.px[1],
+                                ),
+                                scale: Vec3::splat(tile_scale),
+                                ..Default::default()
+                            },
+                            sprite: TextureAtlasSprite::new(tile.t as u32),
+                            texture_atlas: handles[&tileset_uid].clone(),
                             ..Default::default()
-                        },
-                        sprite: TextureAtlasSprite::new(tile.t as u32),
-                        texture_atlas: handles[&tileset_uid].clone(),
-                        ..Default::default()
-                    });
+                        });
+                    }
                 }
             }
         }

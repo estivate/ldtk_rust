@@ -55,7 +55,7 @@ In a startup system you can read in the LDtk JSON and load all the tile assets. 
 you can spawn the tiles by iterating through the levels, layer instances and finally
 tiles.
 
-The Bevy example displays AutoTile layers correctly for most of the sample files, but
-is currently not displaying Entities. It also currently errors on some of the more
-advanced samples.
+The Bevy example displays IntGrid and AutoTile layers correctly for most of the
+sample files, but is currently not displaying Entities. It also currently errors
+on some of the more advanced samples.
 
