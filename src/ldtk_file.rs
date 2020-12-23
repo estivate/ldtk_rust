@@ -21,6 +21,7 @@ pub struct LdtkFile {
     pub defs: Defs,
     pub levels: Vec<Level>,
     #[serde(skip)]
+    #[deprecated = "extend the LdtkFile struct for your game engine, see /examples/bevy_engine.rs"]
     pub redraw: bool,
 }
 impl LdtkFile {
