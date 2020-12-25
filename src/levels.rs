@@ -1,4 +1,5 @@
 use serde::Deserialize;
+use serde_json::Value;
 
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -48,7 +49,7 @@ pub struct LayerInstance {
     pub auto_layer_tiles: Vec<TileInstance>,
     pub seed: i32,
     pub grid_tiles: Vec<TileInstance>,
-    //pub entity_instances: Vec<EntityInstance>,
+    pub entity_instances: Vec<EntityInstance>,
 }
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -66,3 +67,49 @@ pub struct TileInstance {
     pub t: i32,
     pub d: Vec<i32>,
 }
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct EntityInstance {
+    #[serde(rename = "__grid")]
+    pub __grid: Vec<i32>,
+    #[serde(rename = "__identifier")]
+    pub __identifier: String,
+    #[serde(rename = "__tile")]
+    pub __tile: Option<OptionalTile>,
+    pub def_uid: i32,
+    pub field_instances: Vec<FieldInstance>,
+    pub px: Vec<i32>,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct OptionalTile {
+    pub src_rect: Vec<i32>,
+    pub tileset_uid: i32,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct FieldInstance {
+    #[serde(rename = "__identifier")]
+    pub __identifier: String,
+    #[serde(rename = "__type")]
+    pub __type: String,
+    #[serde(rename = "__value")]
+    pub __value: Value,
+    pub def_uid: i32,
+}
+
+// #[derive(Debug, Deserialize, Clone)]
+// #[serde(untagged)]
+// pub enum FieldInstanceValueTypes {
+//     S(String),
+//     I(i32),
+//     B(bool),
+//     F(f32),
+//     VS(Vec<String>),
+//     VI(Vec<i32>),
+//     VB(Vec<bool>),
+//     VF(Vec<f32>),
+// }
