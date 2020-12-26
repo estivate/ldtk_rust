@@ -22,8 +22,55 @@ pub struct Layer {
     pub display_opacity: f32,
     pub px_offset_x: i32,
     pub px_offset_y: i32,
-    //int_grid_values: UNUSED?
+    pub int_grid_values: Vec<IntGridValuesColors>,
+    pub auto_tileset_def_uid: Option<i32>,
+    pub auto_rule_groups: Vec<AutoRuleGroup>,
+    pub auto_source_layer_def_uid: Option<i32>,
+    pub tileset_def_uid: Option<i32>,
+    pub tile_pivot_x: i32,
+    pub tile_pivot_y: i32,
 }
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct IntGridValuesColors {
+    pub color: String,
+    pub identifier: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct AutoRuleGroup {
+    pub active: bool,
+    pub collapsed: bool,
+    pub name: String,
+    pub rules: Vec<AutoLayerRuleDefinition>,
+    pub uid: i32,
+}
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct AutoLayerRuleDefinition {
+    pub active: bool,
+    pub break_on_match: bool,
+    pub chance: f32,
+    pub checker: String, // documented as boolean?
+    pub flip_x: bool,
+    pub flip_y: bool,
+    pub pattern: Vec<i32>,
+    pub perlin_active: bool,
+    pub perlin_octaves: f32,
+    pub perlin_scale: f32,
+    pub perlin_seed: f32,
+    pub pivot_x: f32,
+    pub pivot_y: f32,
+    pub size: i32,
+    pub tile_ids: Vec<i32>,
+    //pub tile_mode:
+    pub uid: i32,
+    pub x_modulo: i32,
+    pub y_modulo: i32,
+}
+
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Entity {
