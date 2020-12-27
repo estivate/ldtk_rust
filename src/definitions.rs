@@ -21,7 +21,7 @@ pub struct LdtkEnum {
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct LdtkEnumValue {
-    #[serde(rename = "__tile_src_rect")]
+    #[serde(rename = "__tileSrcRect")]
     pub __tile_src_rect: Vec<i32>,
     pub id: String,
     pub tile_id: Option<i32>,
