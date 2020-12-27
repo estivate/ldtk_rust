@@ -14,10 +14,16 @@ pub struct Level {
     pub __bg_color: String,
     pub bg_color: Option<String>,
     pub layer_instances: Vec<LayerInstance>,
-    //#[serde(rename = "__neighbours")]
-    //pub __neighbours: Vec<Neighbor>,
+    #[serde(rename = "__neighbours")]
+    pub __neighbours: Vec<Neighbor>,
 }
 
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct Neighbor {
+    pub dir: String,
+    pub level_uid: i32,
+}
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct LayerInstance {
@@ -63,7 +69,7 @@ pub struct IntGrid {
 pub struct TileInstance {
     pub px: Vec<i32>,
     pub src: Vec<i32>,
-    pub f: u8,
+    pub f: i32,
     pub t: i32,
     pub d: Vec<i32>,
 }

@@ -1,14 +1,31 @@
 use serde::Deserialize;
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub struct Defs {
+pub struct Definitions {
     pub layers: Vec<Layer>,
     pub entities: Vec<Entity>,
     pub tilesets: Vec<TileSet>,
-    //pub enums:
-    //pub external_enums:
+    pub enums: Vec<LdtkEnum>,
+    pub external_enums: Vec<LdtkEnum>,
 }
 
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct LdtkEnum {
+    pub external_rel_path: Option<String>,
+    pub icon_tileset_uid: Option<i32>,
+    pub identifier: String,
+    pub uid: i32,
+    pub values: Vec<LdtkEnumValue>,
+}
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct LdtkEnumValue {
+    #[serde(rename = "__tile_src_rect")]
+    pub __tile_src_rect: Vec<i32>,
+    pub id: String,
+    pub tile_id: Option<i32>,
+}
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Layer {
@@ -65,7 +82,7 @@ pub struct AutoLayerRuleDefinition {
     pub pivot_y: f32,
     pub size: i32,
     pub tile_ids: Vec<i32>,
-    //pub tile_mode:
+    pub tile_mode: String, // documented as Enum
     pub uid: i32,
     pub x_modulo: i32,
     pub y_modulo: i32,

@@ -3,22 +3,18 @@
 //!
 //! Example:
 //! ```
-//! use ldtk_rust::LdtkFile;
-//!
-//! fn main() {
-//!     let file_path = "assets/AutoLayers_4_Advanced.ldtk".to_string();
-//!     let ldtk = LdtkFile::new(file_path);
-//!     println!("First level pixel height is {}!", ldtk.levels[0].px_hei);
-//! }
+//! let file_path = "assets/AutoLayers_4_Advanced.ldtk".to_string();
+//! let ldtk = LdtkFile::new(file_path);
+//! println!("First level pixel height is {}!", ldtk.levels[0].px_hei);
 //! ```
 //!
 //! See /examples directory for more.
 //!
 
-mod defs;
+mod definitions;
 pub mod ldtk_file;
 mod levels;
 
-pub use defs::*;
+pub use definitions::*;
 pub use ldtk_file::LdtkFile;
 pub use levels::*;

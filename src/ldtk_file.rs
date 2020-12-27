@@ -1,6 +1,6 @@
 use serde::Deserialize;
 
-use crate::{defs::Defs, levels::Level};
+use crate::{definitions::Definitions, levels::Level};
 use std::{fs::File, path::Path};
 
 #[derive(Debug, Deserialize)]
@@ -18,7 +18,7 @@ pub struct LdtkFile {
     pub world_layout: String,
     pub world_grid_width: i32,
     pub world_grid_height: i32,
-    pub defs: Defs,
+    pub defs: Definitions,
     pub levels: Vec<Level>,
     #[serde(skip)]
     #[deprecated = "extend the LdtkFile struct for your game engine, see /examples/bevy_engine.rs"]

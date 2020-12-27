@@ -13,8 +13,10 @@ Currently all sample .ldtk files included in the LDtk 0.6.1 release load without
 any errors. You can use the [basic example](examples/basic.rs) to check your own
 files.
 
-Most fields from the "Levels" section of the JSON are supported, but there are still
-a number of fields from the "Defs" section that have not been implemented.
+Most of the JSON data from the LDtk files is supported, except fields that seem
+to be only used by the editor itself. Open an issue if you find a useful field
+not included. Most projects will likley focus on the data in the "Levels" section
+of the JSON.
 
 ## Getting Started
 
@@ -50,12 +52,22 @@ Example dependencies do not load when compliling the library for production.
 
 ## Using with [Bevy Engine](https://bevyengine.org/)
 
-An example running in Bevy 0.4 is included in the [examples](examples/) directory.
-In a startup system you can read in the LDtk JSON and load all the tile assets. Then
-you can spawn the tiles by iterating through the levels, layer instances and finally
-tiles.
+An example running in Bevy 0.4 is included in the [examples](examples/) directory. If the LDtk file makes reference to more than one tileset, you may have intermittent issues due to [issue 1056](https://github.com/bevyengine/bevy/issues/1056)
 
-The Bevy example displays IntGrid and AutoTile layers correctly for most of the
-sample files, but is currently not displaying Entities. It also currently errors
-on some of the more advanced samples.
 
+## Implementation Details
+
+This library uses [Serde] to parse the JSON file, so most of the code simply defines structs
+that match what is expected in the file. However, a few decisions were made:
+
+* CamelCase names (preferred in JSON) are changed to snake_case names (preferred in Rust)
+* JSON types of String, Int and Float become Rust types of String, i32 and f32
+* "Type" is a reserved word in Rust, so JSON fields named "type" are prefixed with the struct's
+name. For example: "layer_type"
+* Fields that allow null as a value are wrapped in an Option (example: "bgColor: Option<String>")
+* There is one dynamic type in the source file: the "__value" field in the FieldInstance struct.
+In Rust this brought in as a "serde::Value" type. This may not be the best way to hanlde, but
+projects consuming this library probably know what is coming in this field and can match/convert
+it accordingly.
+* The "tileMode" field of the auto-layer "rule" definition node is documented as an enum but is
+presented as a String in the JSON and is typed as a String in Rust.

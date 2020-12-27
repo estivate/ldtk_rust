@@ -4,7 +4,7 @@ use ldtk_rust::LdtkFile;
 
 use std::collections::HashMap;
 
-// extend the LdtkFile struct with whatever you need for your
+// extend the LdtkFile struct with whatever fields you need for your
 // game engine.
 struct Map {
     ldtk_file: LdtkFile,
@@ -37,7 +37,8 @@ fn setup(
         current_level: 0,
     };
 
-    // now set up the tile assets
+    // now set up the tile assets, note Bevy issue #1056 if loading multiple
+    // tilemaps: https://github.com/bevyengine/bevy/issues/1056
     let mut texture_atlas_handles: HashMap<i32, Handle<TextureAtlas>> = HashMap::new();
     for tileset in map.ldtk_file.defs.tilesets.iter() {
         // load the asset
@@ -45,7 +46,7 @@ fn setup(
 
         // calculate the atlas
         let t_size = tileset.tile_grid_size;
-        let t_col = tileset.px_wid / t_size; //TODO: add spacing
+        let t_col = tileset.px_wid / t_size;
         let t_rows = tileset.px_hei / t_size;
         let texture_atlas = TextureAtlas::from_grid(
             texture_handle,
