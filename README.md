@@ -71,8 +71,7 @@ example: layer_type
 example: bgColor: Option<String>
 ```
 * There is one dynamic type in the source file: the "__value" field in the FieldInstance struct.
-In Rust this brought in as a "serde::Value" type. This may not be the best way to hanlde, but
-projects consuming this library probably know what is coming in this field and can match/convert
-it accordingly.
+This is brought into Rust as a "serde::Value" type. There might be a better way to do this, but
+projects consuming this library likely know the expected value and can match/convert as needed.
 * The "tileMode" field of the auto-layer "rule" definition node is documented as an enum but is
 presented as a String in the JSON and is typed as a String in Rust.
