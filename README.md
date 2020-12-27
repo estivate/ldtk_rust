@@ -52,19 +52,24 @@ Example dependencies do not load when compliling the library for production.
 
 ## Using with [Bevy Engine](https://bevyengine.org/)
 
-An example running in Bevy 0.4 is included in the [examples](examples/) directory. If the LDtk file makes reference to more than one tileset, you may have intermittent issues due to [issue 1056](https://github.com/bevyengine/bevy/issues/1056)
+An example running in Bevy 0.4 is included in the [examples](examples/) directory. If the LDtk file makes reference to more than one tileset, you may have intermittent issues due to [issue 1056](https://github.com/bevyengine/bevy/issues/1056).
 
 
 ## Implementation Details
 
-This library uses [Serde] to parse the JSON file, so most of the code simply defines structs
+This library uses [Serde](https://serde.rs/) to parse the JSON file, so most of the code simply defines structs
 that match what is expected in the file. However, a few decisions were made:
 
 * CamelCase names (preferred in JSON) are changed to snake_case names (preferred in Rust)
 * JSON types of String, Int and Float become Rust types of String, i32 and f32
-* "Type" is a reserved word in Rust, so JSON fields named "type" are prefixed with the struct's
-name. For example: "layer_type"
-* Fields that allow null as a value are wrapped in an Option (example: "bgColor: Option<String>")
+* "Type" is a reserved word in Rust, so JSON fields named "type" are prefixed with the struct's name.
+```
+example: layer_type
+```
+* Fields that allow null as a value are wrapped in an Option.
+```
+example: bgColor: Option<String>
+```
 * There is one dynamic type in the source file: the "__value" field in the FieldInstance struct.
 In Rust this brought in as a "serde::Value" type. This may not be the best way to hanlde, but
 projects consuming this library probably know what is coming in this field and can match/convert
