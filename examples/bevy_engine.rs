@@ -7,9 +7,16 @@ use std::collections::HashMap;
 // Tiles come in all sizes, this gives us easy control over
 // making them bigger and smaller.
 const TILE_SCALE: f32 = 2.5;
-// Extend the LdtkFile object with whatever you need for your
-// game engine. In a real game you might need a variety of
-// fields to control how and when you use the LDtk information.
+
+// When you use ldtk_rust you'll generate an instance of the
+// LdtkFile struct. This is where all your tile info will be.
+// In a real game, you'll need some more fields in order to use
+// this tile info correctly. You may want to track the player's
+// current level, what they've seen or can see, and when it's
+// time to redraw the tiles (for instance, on a level change).
+// There are lots of ways to do this (components, etc.) but here
+// we will simply extend LdtkFile by wrapping it in our own
+// struct that adds all the fields we need.
 struct Map {
     ldtk_file: LdtkFile,
     redraw: bool,
@@ -20,7 +27,7 @@ struct Map {
 // for layers and tiles. You'll loop through the layers and
 // for each layer you'll loop through the tiles for that layer.
 // This struct holds the relevant layer information so we can
-// easily pass it all at once to each tile.
+// easily pass it all at once to fuctions that work with tiles.
 #[derive(Clone, Copy)]
 struct LayerInfo {
     width: f32,
@@ -49,7 +56,7 @@ fn main() {
 // and then register whatever we need in "global" scope as
 // Bevy Resources. Here I choose to save the parsed LDtk info
 // as a Resource as well as any graphical tilemap assets as
-// Texture Atlases. This seemed simplest as an example.
+// Texture Atlases.
 fn setup(
     commands: &mut Commands,
     asset_server: Res<AssetServer>,
@@ -133,8 +140,8 @@ fn update(
     // tiles. These Layer Instances can be one of four different kinds of layers:
     // IntGrid, Entities, Tiles or AutoLayer. Tiles and AutoLayers are easy: you
     // always iterate through Tile Instances to do your work. IntGrids may or may
-    // not use a tileset (they can use flat colors). If they have tiles, you handle
-    // them just like Tiles and AutLayers (but you have to check for a tileset first).
+    // not use a tileset (they can use flat color values). If they have tiles, you handle
+    // them just like Tiles and AutoLayers (but you have to check for a tileset first).
     // For entities you iterate through Entity Instances instead of Tile Instances.
     //
     // Your game only needs to handle the kinds of layers you want to use in LDtk.
@@ -159,7 +166,7 @@ fn update(
         // to calculate the total width and height of our layer. For depth
         // we pick a starting point and add the loop index so we always draw
         // tiles on top of previous iterations. We do all this in a struct
-        // instance so we can easily pass it around to functions later.
+        // instance so we can easily pass it around to tile functions later.
         let layer_info = LayerInfo {
             width: layer.__c_wid as f32 * (layer.__grid_size as f32 * TILE_SCALE),
             height: layer.__c_hei as f32 * (layer.__grid_size as f32 * TILE_SCALE),

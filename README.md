@@ -10,12 +10,12 @@ You should be able to use this to generate game levels in any Rust game framewor
 ## Status
 
 Currently all sample .ldtk files included in the LDtk 0.6.1 release load without
-any errors. You can use the [basic example](examples/basic.rs) to check your own
-files.
+any errors in Rust stable and nightly. You can use the [basic example](examples/basic.rs)
+ to check your own files.
 
 Most of the JSON data from the LDtk files is supported, except fields that seem
 to be only used by the editor itself. Open an issue if you find a useful field
-not included. Most projects will likley focus on the data in the "Levels" section
+not included. Most projects will likely focus on the data in the "Levels" section
 of the JSON.
 
 ## Getting Started
@@ -48,15 +48,15 @@ You can build and/or run the programs in the example folder using cargo:
 > cargo run --example basic
 ```
 
-Example dependencies do not load when compliling the library for production.
+Example dependencies do not load when compiling the library for production.
 
 ## Using in a Real Game
 
 An example running in [Bevy Engine](https://bevyengine.org/) is included in the [examples](examples/) directory.
-If you're using a different game engine, this example is full of comments and helpful to see how the data 
-structure is used.
+There are lots of comments, and the focus of the example is on the process, not the Bevy-specific code, so if you
+are using another game engine the example will hopefully still be understandable and useful.
 
-Please note if using Bevy 0.4 and you have more than one tileset referenced in LDtk, you may have intermittent issues due to [issue 1056](https://github.com/bevyengine/bevy/issues/1056).
+Please note if you are using Bevy and you have more than one tileset referenced in LDtk, you may have intermittent issues due to [issue 1056](https://github.com/bevyengine/bevy/issues/1056).
 
 
 ## Implementation Details
