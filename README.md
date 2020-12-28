@@ -50,9 +50,13 @@ You can build and/or run the programs in the example folder using cargo:
 
 Example dependencies do not load when compliling the library for production.
 
-## Using with [Bevy Engine](https://bevyengine.org/)
+## Using in a Real Game
 
-An example running in Bevy 0.4 is included in the [examples](examples/) directory. If the LDtk file makes reference to more than one tileset, you may have intermittent issues due to [issue 1056](https://github.com/bevyengine/bevy/issues/1056).
+An example running in [Bevy Engine](https://bevyengine.org/) is included in the [examples](examples/) directory.
+If you're using a different game engine, this example is full of comments and helpful to see how the data 
+structure is used.
+
+Please note if using Bevy 0.4 and you have more than one tileset referenced in LDtk, you may have intermittent issues due to [issue 1056](https://github.com/bevyengine/bevy/issues/1056).
 
 
 ## Implementation Details
