@@ -9,7 +9,7 @@ You should be able to use this to generate game levels in any Rust game framewor
 
 ## Status
 
-Currently all sample .ldtk files included in the LDtk 0.6.1 release load without
+Currently all sample .ldtk files included in the LDtk 0.6.2 release load without
 any errors in Rust stable and nightly. You can use the [basic example](examples/basic.rs)
  to check your own files.
 
@@ -56,7 +56,8 @@ An example running in [Bevy Engine](https://bevyengine.org/) is included in the 
 There are lots of comments, and the focus of the example is on the process, not the Bevy-specific code. If you
 are using another game engine the example will hopefully still be understandable and useful.
 
-Please note if you are using Bevy and you have more than one tileset referenced in LDtk, you may have intermittent issues due to [issue 1056](https://github.com/bevyengine/bevy/issues/1056).
+Please note if you are using Bevy and you have more than one tileset referenced in LDtk, you may have 
+intermittent issues due to [issue 1056](https://github.com/bevyengine/bevy/issues/1056).
 
 
 ## Implementation Details
