@@ -1,7 +1,7 @@
 
 # LDtk Rust Library
 
-![Crates.io](https://img.shields.io/crates/v/ldtk_rust.svg)
+[![Crates.io](https://img.shields.io/crates/v/ldtk_rust.svg)](https://crates.io/crates/ldtk_rust)
 [![Docs.rs](https://docs.rs/ldtk_rust/badge.svg)](https://docs.rs/ldtk_rust)
 
 This library enables access to [LDtk](https://ldtk.io) data for use in Rust.
