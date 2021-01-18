@@ -10,7 +10,7 @@
 
 use bevy::prelude::*;
 use bevy::render::pass::ClearColor;
-use ldtk_rust::{EntityInstance, IntGrid, LdtkFile, TileInstance};
+use ldtk_rust::{EntityInstance, Project, TileInstance};
 
 use std::collections::HashMap;
 
@@ -22,7 +22,7 @@ const TILE_SCALE: f32 = 2.5;
 // game engine. In a real game you might need a variety of
 // fields to control how and when you use the LDtk information.
 struct Map {
-    ldtk_file: LdtkFile,
+    ldtk_file: Project,
     redraw: bool,
     current_level: usize,
 }
@@ -115,7 +115,7 @@ fn setup(
     // Create a new Map instance and set the values. This is where we
     // actually load in the LDtk file.
     let map = Map {
-        ldtk_file: LdtkFile::new(LDTK_FILE_PATH.to_string()),
+        ldtk_file: Project::new(LDTK_FILE_PATH.to_string()),
         redraw: true,
         current_level: 0,
     };
@@ -134,7 +134,7 @@ fn setup(
     // assigns as the tileset's UID. If you know you only have one tileset
     // asset, you could simplify this and just load it like any other asset
     // using map.ldtk_file.defs.tilesets[0].rel_path
-    for tileset in map.ldtk_file.defs.tilesets.iter() {
+    for tileset in map.ldtk_file.defs.unwrap().tilesets.iter() {
         let texture_handle = asset_server.load(&tileset.rel_path[..]);
 
         let texture_atlas = TextureAtlas::from_grid(
@@ -146,7 +146,7 @@ fn setup(
         let texture_atlas_handle = texture_atlases.add(texture_atlas);
         visual_assets
             .spritesheets
-            .insert(tileset.uid, texture_atlas_handle);
+            .insert(tileset.uid as i32, texture_atlas_handle);
     }
 
     // LDtk IntGrids support setting colors for walls, sky, etc. If you are doing this
@@ -154,32 +154,43 @@ fn setup(
     // materials for each integer value. The Bevy snake tutorial has some good sample
     // code for using materials: https://mbuffett.com/posts/bevy-snake-tutorial/
 
-    for layer in map
-        .ldtk_file
-        .defs
-        .layers
-        .iter()
-        .filter(|f| f.__type == "IntGrid")
+    for layer in
+        map.ldtk_file
+            .defs
+            .unwrap()
+            .layers
+            .iter()
+            .filter(|f| match f.purple_type.unwrap() {
+                ldtk_rust::Type::IntGrid => true,
+                _ => false,
+            })
     {
         let mut colors = Vec::new();
         for values in layer.int_grid_values.iter() {
-            let clr = match Color::hex(&values.color.clone()[1..]) {
-                Ok(t) => t,
-                Err(e) => {
-                    println!("Error: {:?}", e);
-                    Color::BLUE
+            for (k, v) in values.iter() {
+                if k == &"color".to_string() {
+                    let val = v.unwrap().as_str().unwrap();
+                    let clr = match Color::hex(&val[1..0]) {
+                        Ok(t) => t,
+                        Err(e) => {
+                            println!("Error: {:?}", e);
+                            Color::BLUE
+                        }
+                    };
+                    let col_mat = materials.add(ColorMaterial::from(clr));
+                    colors.push(col_mat);
                 }
-            };
-            let col_mat = materials.add(ColorMaterial::from(clr));
-            colors.push(col_mat);
+            }
         }
-        visual_assets.int_grid_materials.insert(layer.uid, colors);
+        visual_assets
+            .int_grid_materials
+            .insert(layer.uid as i32, colors);
     }
 
     // LDtk supports placement of Entities in levels (player, chest, health potion, etc.)
     // If you are using this feature you may want to do additional setup here beyond
     // loading in the tilemap assets above.
-    for ent in map.ldtk_file.defs.entities.iter() {
+    for ent in map.ldtk_file.defs.unwrap().entities.iter() {
         let clr = match Color::hex(&ent.color.clone()[1..]) {
             Ok(t) => t,
             Err(e) => {
@@ -189,7 +200,9 @@ fn setup(
         };
         let col_mat = materials.add(ColorMaterial::from(clr));
 
-        visual_assets.entity_materials.insert(ent.uid, col_mat);
+        visual_assets
+            .entity_materials
+            .insert(ent.uid as i32, col_mat);
     }
 
     // add the LDtk object and the tile assets as resources and spawn a camera
@@ -211,7 +224,7 @@ fn update(commands: &mut Commands, mut map: ResMut<Map>, visual_assets: Res<Visu
     // Add a background color. The "__bg_color" field should always be populated
     // with either the default background color or the level's custom color.
     commands.insert_resource(ClearColor(
-        Color::hex(&map.ldtk_file.levels[0].__bg_color[1..]).unwrap(),
+        Color::hex(&map.ldtk_file.levels[0].bg_color[1..]).unwrap(),
     ));
 
     // For the current level, loop through the Layer Instances and start spawning
@@ -230,6 +243,7 @@ fn update(commands: &mut Commands, mut map: ResMut<Map>, visual_assets: Res<Visu
     // on the z-axis easier to reason about.
     for (idx, layer) in map.ldtk_file.levels[map.current_level]
         .layer_instances
+        .unwrap()
         .iter()
         .enumerate()
         .rev()
@@ -238,7 +252,8 @@ fn update(commands: &mut Commands, mut map: ResMut<Map>, visual_assets: Res<Visu
         // If there's no tileset, it's value is set to -1, which could be used
         // as a check. Currently it is used only as a key to the hash of asset
         // handles.
-        let tileset_uid = layer.__tileset_def_uid.unwrap_or(-1);
+        let tileset_uid = layer.tileset_def_uid.unwrap_or(-1) as i32;
+        let layer_uid = layer.layer_def_uid as i32;
 
         // Multiply the grid size by the tile size and our scaling constant
         // to calculate the total width and height of our layer. For depth
@@ -246,19 +261,19 @@ fn update(commands: &mut Commands, mut map: ResMut<Map>, visual_assets: Res<Visu
         // tiles on top of previous iterations. We do all this in a struct
         // instance so we can easily pass it around to functions later.
         let layer_info = LayerInfo {
-            grid_width: layer.__c_wid,
-            _grid_height: layer.__c_hei,
-            grid_cell_size: layer.__grid_size,
+            grid_width: layer.c_wid as i32,
+            _grid_height: layer.c_hei as i32,
+            grid_cell_size: layer.grid_size as i32,
             z_index: 50 - idx as i32,
-            px_width: layer.__c_wid as f32 * (layer.__grid_size as f32 * TILE_SCALE),
-            px_height: layer.__c_hei as f32 * (layer.__grid_size as f32 * TILE_SCALE),
+            px_width: layer.c_wid as f32 * (layer.grid_size as f32 * TILE_SCALE),
+            px_height: layer.c_hei as f32 * (layer.grid_size as f32 * TILE_SCALE),
         };
 
         // Finally we match on the four possible kinds of Layer Instances and
         // handle each accordingly.
-        match &layer.__type[..] {
+        match &layer.layer_instance_type[..] {
             "Tiles" => {
-                println!("Generating Tile Layer: {}", layer.__identifier);
+                println!("Generating Tile Layer: {}", layer.identifier);
                 for tile in layer.grid_tiles.iter() {
                     display_tile(
                         layer_info,
@@ -269,7 +284,7 @@ fn update(commands: &mut Commands, mut map: ResMut<Map>, visual_assets: Res<Visu
                 }
             }
             "AutoLayer" => {
-                println!("Generating AutoTile Layer: {}", layer.__identifier);
+                println!("Generating AutoTile Layer: {}", layer.identifier);
                 for tile in layer.auto_layer_tiles.iter() {
                     display_tile(
                         layer_info,
@@ -280,10 +295,11 @@ fn update(commands: &mut Commands, mut map: ResMut<Map>, visual_assets: Res<Visu
                 }
             }
             "IntGrid" => {
-                match layer.__tileset_def_uid {
+                match layer.tileset_def_uid {
                     Some(i) => {
                         // we have tiles, so handle just like Tiles and AutoLayers
-                        println!("Generating IntGrid Layer w/ Tiles: {}", layer.__identifier);
+                        println!("Generating IntGrid Layer w/ Tiles: {}", layer.identifier);
+                        let i = i as i32;
                         for tile in layer.auto_layer_tiles.iter() {
                             display_tile(
                                 layer_info,
@@ -298,43 +314,50 @@ fn update(commands: &mut Commands, mut map: ResMut<Map>, visual_assets: Res<Visu
                         // the color values to represent the level visually.
                         println!(
                             "Generating IntGrid Layer w/ Color Materials: {}",
-                            layer.__identifier
+                            layer.identifier
                         );
                         for tile in layer.int_grid.iter() {
-                            display_color(
-                                layer_info,
-                                tile,
-                                commands,
-                                visual_assets.int_grid_materials[&layer.layer_def_uid]
-                                    [tile.v as usize]
-                                    .clone(),
-                            )
+                            for (k, v) in tile {
+                                if k == "v" {
+                                    let v2 = v.unwrap().as_i64().unwrap();
+                                    display_color(
+                                        layer_info,
+                                        tile,
+                                        commands,
+                                        visual_assets.int_grid_materials[&layer_uid][v2 as usize]
+                                            .clone(),
+                                    )
+                                }
+                            }
                         }
                     }
                 }
             }
             "Entities" => {
-                println!("Generating Entities Layer: {}", layer.__identifier);
+                println!("Generating Entities Layer: {}", layer.identifier);
                 // Entities reference their tiles and colors within the instances
                 for entity in layer.entity_instances.iter() {
                     // we need some extra fields from the defs section of the
                     // JSON that aren't included in the entity instances.
                     let mut extra_ent_defs = ExtraEntDefs::new();
-                    for ent in map.ldtk_file.defs.entities.iter() {
+                    for ent in map.ldtk_file.defs.unwrap().entities.iter() {
                         if ent.uid == entity.def_uid {
                             extra_ent_defs.__tile_id = 0;
-                            extra_ent_defs.__width = ent.width;
-                            extra_ent_defs.__height = ent.height;
+                            extra_ent_defs.__width = ent.width as i32;
+                            extra_ent_defs.__height = ent.height as i32;
                             //__color: ent.color.clone(),
                         }
-                        if ent.render_mode == "Tile" {
-                            extra_ent_defs.__tile_id = ent.tile_id.unwrap();
-                            for ts in map.ldtk_file.defs.tilesets.iter() {
-                                if ts.uid == ent.tileset_id.unwrap() {
-                                    extra_ent_defs.__scale =
-                                        ent.width as f32 / ts.tile_grid_size as f32;
+                        match ent.render_mode.unwrap() {
+                            ldtk_rust::RenderMode::Tile => {
+                                extra_ent_defs.__tile_id = ent.tile_id.unwrap() as i32;
+                                for ts in map.ldtk_file.defs.unwrap().tilesets.iter() {
+                                    if ts.uid == ent.tileset_id.unwrap() {
+                                        extra_ent_defs.__scale =
+                                            ent.width as f32 / ts.tile_grid_size as f32;
+                                    }
                                 }
                             }
+                            _ => (),
                         }
                     }
 
@@ -348,7 +371,7 @@ fn update(commands: &mut Commands, mut map: ResMut<Map>, visual_assets: Res<Visu
                 }
             }
             _ => {
-                println!("Not Implemented: {}", layer.__identifier);
+                println!("Not Implemented: {}", layer.identifier);
             }
         }
     }
@@ -382,8 +405,8 @@ fn display_tile(
                 layer_info.px_height,
                 layer_info.grid_cell_size,
                 TILE_SCALE,
-                tile.px[0],
-                tile.px[1],
+                tile.px[0] as i32,
+                tile.px[1] as i32,
                 layer_info.z_index,
             ),
             rotation: flip(flip_x, flip_y),
@@ -404,11 +427,18 @@ fn display_entity(
     visual_assets: VisualAssets,
     extra_ent_defs: &ExtraEntDefs,
 ) {
-    match &entity.__tile {
+    let mut tileset_uid: i32 = 0;
+    let mut tile_uid: i32 = 0;
+    match &entity.tile {
         Some(t) => {
             // process tile asset
-            let handle: Handle<TextureAtlas> = visual_assets.spritesheets[&t.tileset_uid].clone();
 
+            for (k, v) in t {
+                if k == "tilesetUid" {
+                    tileset_uid = v.unwrap().as_i64().unwrap() as i32;
+                }
+            }
+            let handle: Handle<TextureAtlas> = visual_assets.spritesheets[&tileset_uid];
             commands.spawn(SpriteSheetBundle {
                 transform: Transform {
                     translation: convert_to_world(
@@ -416,8 +446,8 @@ fn display_entity(
                         layer_info.px_height,
                         extra_ent_defs.__height,
                         TILE_SCALE,
-                        entity.__grid[0] * layer_info.grid_cell_size,
-                        entity.__grid[1] * layer_info.grid_cell_size,
+                        entity.grid[0] as i32 * layer_info.grid_cell_size,
+                        entity.grid[1] as i32 * layer_info.grid_cell_size,
                         layer_info.z_index,
                     ),
                     scale: Vec3::splat(extra_ent_defs.__scale * TILE_SCALE),
@@ -431,7 +461,7 @@ fn display_entity(
         None => {
             // process color shape
             let handle: Handle<ColorMaterial> =
-                visual_assets.entity_materials[&entity.def_uid].clone();
+                visual_assets.entity_materials[&(entity.def_uid as i32)].clone();
             commands.spawn(SpriteBundle {
                 material: handle,
                 sprite: Sprite::new(Vec2::new(
@@ -444,8 +474,8 @@ fn display_entity(
                         layer_info.px_height,
                         extra_ent_defs.__height,
                         TILE_SCALE,
-                        entity.__grid[0] * layer_info.grid_cell_size,
-                        entity.__grid[1] * layer_info.grid_cell_size,
+                        entity.grid[0] as i32 * layer_info.grid_cell_size,
+                        entity.grid[1] as i32 * layer_info.grid_cell_size,
                         layer_info.z_index,
                     ),
                     scale: Vec3::splat(TILE_SCALE),
@@ -459,12 +489,18 @@ fn display_entity(
 
 fn display_color(
     layer_info: LayerInfo,
-    tile: &IntGrid,
+    tile: &HashMap<String, Option<serde_json::Value>>,
     commands: &mut Commands,
     handle: Handle<ColorMaterial>,
 ) {
-    let x = tile.coord_id % layer_info.grid_width;
-    let y = tile.coord_id / layer_info.grid_width;
+    let mut coord_id: i64;
+    for (k, v) in tile.iter() {
+        if k == "coord_id" {
+            coord_id = v.as_ref().unwrap().as_i64().unwrap();
+        }
+    }
+    let x = coord_id as i32 % layer_info.grid_width;
+    let y = coord_id as i32 / layer_info.grid_width;
     //println!("Tile ({},{}) is {}... {:?}", x, y, tile.v, handle);
     commands.spawn(SpriteBundle {
         material: handle,
