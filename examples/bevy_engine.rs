@@ -15,7 +15,7 @@ use ldtk_rust::{EntityInstance, Project, TileInstance};
 use std::collections::HashMap;
 
 // Constants
-const LDTK_FILE_PATH: &str = "assets/test_game.ldtk";
+const LDTK_FILE_PATH: &str = "assets/SeparateLevelFiles.ldtk";
 const TILE_SCALE: f32 = 2.5;
 
 // Extend the LdtkFile object with whatever you need for your
@@ -134,7 +134,7 @@ fn setup(
     // assigns as the tileset's UID. If you know you only have one tileset
     // asset, you could simplify this and just load it like any other asset
     // using map.ldtk_file.defs.tilesets[0].rel_path
-    for tileset in map.ldtk_file.defs.unwrap().tilesets.iter() {
+    for tileset in map.ldtk_file.defs.as_ref().unwrap().tilesets.iter() {
         let texture_handle = asset_server.load(&tileset.rel_path[..]);
 
         let texture_atlas = TextureAtlas::from_grid(
@@ -157,10 +157,10 @@ fn setup(
     for layer in
         map.ldtk_file
             .defs
-            .unwrap()
+            .as_ref().unwrap()
             .layers
             .iter()
-            .filter(|f| match f.purple_type.unwrap() {
+            .filter(|f| match f.purple_type.as_ref().unwrap() {
                 ldtk_rust::Type::IntGrid => true,
                 _ => false,
             })
@@ -169,8 +169,8 @@ fn setup(
         for values in layer.int_grid_values.iter() {
             for (k, v) in values.iter() {
                 if k == &"color".to_string() {
-                    let val = v.unwrap().as_str().unwrap();
-                    let clr = match Color::hex(&val[1..0]) {
+                    let val = v.as_ref().unwrap().as_str().unwrap();
+                    let clr = match Color::hex(&val[1..]) {
                         Ok(t) => t,
                         Err(e) => {
                             println!("Error: {:?}", e);
@@ -190,7 +190,7 @@ fn setup(
     // LDtk supports placement of Entities in levels (player, chest, health potion, etc.)
     // If you are using this feature you may want to do additional setup here beyond
     // loading in the tilemap assets above.
-    for ent in map.ldtk_file.defs.unwrap().entities.iter() {
+    for ent in map.ldtk_file.defs.as_ref().unwrap().entities.iter() {
         let clr = match Color::hex(&ent.color.clone()[1..]) {
             Ok(t) => t,
             Err(e) => {
@@ -243,6 +243,7 @@ fn update(commands: &mut Commands, mut map: ResMut<Map>, visual_assets: Res<Visu
     // on the z-axis easier to reason about.
     for (idx, layer) in map.ldtk_file.levels[map.current_level]
         .layer_instances
+        .as_ref()
         .unwrap()
         .iter()
         .enumerate()
@@ -319,7 +320,7 @@ fn update(commands: &mut Commands, mut map: ResMut<Map>, visual_assets: Res<Visu
                         for tile in layer.int_grid.iter() {
                             for (k, v) in tile {
                                 if k == "v" {
-                                    let v2 = v.unwrap().as_i64().unwrap();
+                                    let v2 = v.as_ref().unwrap().as_i64().unwrap();
                                     display_color(
                                         layer_info,
                                         tile,
@@ -340,17 +341,17 @@ fn update(commands: &mut Commands, mut map: ResMut<Map>, visual_assets: Res<Visu
                     // we need some extra fields from the defs section of the
                     // JSON that aren't included in the entity instances.
                     let mut extra_ent_defs = ExtraEntDefs::new();
-                    for ent in map.ldtk_file.defs.unwrap().entities.iter() {
+                    for ent in map.ldtk_file.defs.as_ref().unwrap().entities.iter() {
                         if ent.uid == entity.def_uid {
                             extra_ent_defs.__tile_id = 0;
                             extra_ent_defs.__width = ent.width as i32;
                             extra_ent_defs.__height = ent.height as i32;
                             //__color: ent.color.clone(),
                         }
-                        match ent.render_mode.unwrap() {
+                        match ent.render_mode.as_ref().unwrap() {
                             ldtk_rust::RenderMode::Tile => {
                                 extra_ent_defs.__tile_id = ent.tile_id.unwrap() as i32;
-                                for ts in map.ldtk_file.defs.unwrap().tilesets.iter() {
+                                for ts in map.ldtk_file.defs.as_ref().unwrap().tilesets.iter() {
                                     if ts.uid == ent.tileset_id.unwrap() {
                                         extra_ent_defs.__scale =
                                             ent.width as f32 / ts.tile_grid_size as f32;
@@ -435,10 +436,10 @@ fn display_entity(
 
             for (k, v) in t {
                 if k == "tilesetUid" {
-                    tileset_uid = v.unwrap().as_i64().unwrap() as i32;
+                    tileset_uid = v.as_ref().unwrap().as_i64().unwrap() as i32;
                 }
             }
-            let handle: Handle<TextureAtlas> = visual_assets.spritesheets[&tileset_uid];
+            let handle: Handle<TextureAtlas> = visual_assets.spritesheets[&tileset_uid].clone();
             commands.spawn(SpriteSheetBundle {
                 transform: Transform {
                     translation: convert_to_world(
@@ -493,7 +494,7 @@ fn display_color(
     commands: &mut Commands,
     handle: Handle<ColorMaterial>,
 ) {
-    let mut coord_id: i64;
+    let mut coord_id: i64 = 0;
     for (k, v) in tile.iter() {
         if k == "coord_id" {
             coord_id = v.as_ref().unwrap().as_i64().unwrap();
