@@ -19,11 +19,7 @@ pub use json_0_6_3::*;
 // this struct name has to match the auto-generated top-level struct.
 // Currently mirroring the LDTK Haxe API as best I can figure out.
 impl Project {
-    /// Takes a path to an LDtk file and returns a rust struct
-    /// of the parsed JSON. It will mirror the original JSON
-    /// structure for the most part, it uses an auto-generated
-    /// rust file based on the official LDTK JSON Schema.
-    ///
+
     pub fn new(f: String) -> Self {
         let mut o = Project::load_project(f);
         if o.external_levels {
@@ -32,7 +28,7 @@ impl Project {
         o
     }
 
-    /// Read in an LDTK project file
+    // Read in an LDTK project file
     pub fn load_project(f: String) -> Self {
         let json_file_path = Path::new(&f);
         let file = File::open(json_file_path).expect("project file not found");
@@ -40,11 +36,14 @@ impl Project {
         o
     }
 
+    // Remove any items in the project.levels Vec ... useful when you
+    // get external file info and want to replace the items with more
+    // complete data extrated from the files.
     pub fn clear_levels(&mut self) {
         self.levels = Vec::new();
     }
 
-    /// Read in ALL the external level files referred to in an LDTK Project
+    // Read in ALL the external level files referred to in an LDTK Project
     pub fn load_external_levels(&mut self) {
         // check to make sure there ARE separate levels
         // if not, then likely the call to this method
@@ -62,6 +61,7 @@ impl Project {
             self.clear_levels();
 
             // now add each of them to our struct
+            // TODO: remove hard-coded file path
             for file in all_level_files.iter() {
                 let mut full_path = "assets/".to_string();
                 full_path.push_str(&file.to_string());

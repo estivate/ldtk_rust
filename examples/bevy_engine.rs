@@ -1,3 +1,6 @@
+// TODO: needs major work to clean up for 0.6.3-preview...
+//
+//
 // This example is designed to try and cover as many use cases
 // as possible from a wide variety of LDtk source files. That's
 // great for an example file, but it's probably too complex if

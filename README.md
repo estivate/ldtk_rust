@@ -15,6 +15,8 @@ level files. If you are using an earlier version of LDtk you should use the
 [v0.2.0](https://github.com/estivate/ldtk_rust/releases/tag/v0.2.0) version
 of this library.
 
+TODO: lib.rs has a hard-coded file prefix of "/assets" that needs to be refactored.
+
 ## Getting Started
 
 Calling the new() method on the LdtkFile struct with the path to a LDtk file will
