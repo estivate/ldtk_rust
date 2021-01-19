@@ -10,8 +10,8 @@ auto-tiling rules, entity placement and more.
 
 ## Status
 
-This library works with LDtk version 0.7 and supports the optional external
-level files. If you are using earlier version of LDtk you should use the 
+This library works with LDtk version `0.6.3-preview` and supports the optional external
+level files. If you are using an earlier version of LDtk you should use the 
 [v0.2.0](https://github.com/estivate/ldtk_rust/releases/tag/v0.2.0) version
 of this library.
 
@@ -21,12 +21,12 @@ Calling the new() method on the LdtkFile struct with the path to a LDtk file wil
 populate a struct that closely resembles the [LDtk JSON format](https://ldtk.io/json/).
 
 ```rust
-use ldtk_rust::LdtkFile;
+use ldtk_rust::Project;
 
 fn main() {
-    let file_path = "assets/AutoLayers_4_Advanced.ldtk".to_string();
-    let ldtk = LdtkFile::new(file_path);
-    println!("First level pxHei is {}!", ldtk.levels[0].px_hei);
+    let file_path = "assets/SeparateLevelFiles.ldtk".to_string();
+    let ldtk = Project::new(file_path);
+    println!("First level pixel height is {}!", ldtk.levels[0].px_hei);
 }
 ```
 
@@ -64,5 +64,7 @@ by `load_external_levels()` as necessary. If you need to load projects and level
 can call these two methods directly. If you want to load one level at a time, you can call 
 the `load_project()` method followd by `Level::new()` to populate an individual. 
 
+
 ## Implementation Details
 
+TK
