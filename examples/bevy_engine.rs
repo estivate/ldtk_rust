@@ -18,7 +18,7 @@ use ldtk_rust::{EntityInstance, Project, TileInstance};
 use std::collections::HashMap;
 
 // Constants
-const LDTK_FILE_PATH: &str = "assets/SeparateLevelFiles.ldtk";
+const LDTK_FILE_PATH: &str = "assets/test_file2.ldtk";
 const TILE_SCALE: f32 = 2.5;
 
 // Extend the LdtkFile object with whatever you need for your
@@ -46,14 +46,7 @@ struct VisualAssets {
     entity_materials: HashMap<i32, Handle<ColorMaterial>>,
 }
 
-// When working with the LDtk info, you'll have nested loops
-// for layers and tiles. You'll loop through the layers and
-// for each layer you'll loop through the tiles for that layer.
-// This struct holds the relevant layer information so we can
-// easily pass it all at once to each tile.
-//
-// LDtk offers grid-based and pixel-based co-ordinates to work
-// with. We include both here.
+// storage for layer info as we loop through tiles
 #[derive(Clone, Copy)]
 struct LayerInfo {
     grid_width: i32,
