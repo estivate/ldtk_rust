@@ -10,12 +10,14 @@ auto-tiling rules, entity placement and more.
 
 ## Status
 
-This library works with LDtk version `0.6.3-preview` and supports the optional external
+This library works with LDtk version `0.7.0` and supports the optional external
 level files. If you are using an earlier version of LDtk you should use the 
 [v0.2.0](https://github.com/estivate/ldtk_rust/releases/tag/v0.2.0) version
 of this library.
 
-TODO: lib.rs has a hard-coded file prefix of "/assets" that needs to be refactored.
+The Bevy example is still being updated to work with 0.7.0... once that's working
+I'll generate another version for crates.io. In the meantime you can pull 
+from `master`.
 
 ## Getting Started
 
