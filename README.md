@@ -11,9 +11,9 @@ auto-tiling rules, entity placement and more.
 ## Status
 
 This library works with LDtk version `0.7.0` and supports the optional external
-level files. If you are using an earlier version of LDtk you should use the 
-[v0.2.0](https://github.com/estivate/ldtk_rust/releases/tag/v0.2.0) version
-of this library.
+level files. LDtk updates save files automatically, so there's no reason to be
+on an older version, but if you are you should use 
+[v0.2.0](https://github.com/estivate/ldtk_rust/releases/tag/v0.2.0) of this library.
 
 ## Getting Started
 
@@ -30,7 +30,7 @@ fn main() {
 }
 ```
 
-Your editor's autocomplete should help you visualize your options, or you can generate
+Your editor's auto-complete should help you visualize your options, or you can generate
 API docs with "cargo doc --open" or view them [here](https://docs.rs/ldtk_rust/).
 
 ## Run the Examples
@@ -71,7 +71,22 @@ become Rust types of String, i64 and f64.
 
 * Fields that allow null values are wrapped in a Rust `Option<T>`
 
-* LDtk upgrades save files automatically, so there's not much reason to be on an
-older version, but if you are, or if you want to "tweak" anyting about the 
+* If you want to "tweak" anything about the 
 way the schema Rust code is generated, you can change things 
 [here](https://github.com/estivate/ldtk_rust/blob/master/src/json_0_7_0.rs).
+
+## Other Options
+
+* [ldtk-rs](https://github.com/katharostech/LDtk-rs) auto generates the entire 
+crate from the JSON schema specified.
+
+* The LDtk project publishes [QuickType loaders](https://ldtk.io/api/) for a 
+variety of languages. If you have trouble with the Rust version, you can make 
+one yourself by taking the 
+[JSON schema](https://github.com/deepnight/ldtk/blob/master/docs/JSON_SCHEMA.json)
+and pasting it into the [quicktype web tool](https://quicktype.io/). Set the "name"
+to "Project" and the "Source type" to "JSON Schema", then on the right choose the
+Rust language and set field visibility to "Public". Save the resulting file to
+your project and change the serde import line to "use serde::*" and Bob's your Uncle.
+
+
