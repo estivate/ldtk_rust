@@ -13,7 +13,7 @@
 
 use bevy::prelude::*;
 use bevy::render::pass::ClearColor;
-use ldtk_rust::{EntityInstance, Project, TileInstance};
+use ldtk_rust::{EntityInstance, Project, TileInstance, IntGridValueInstance};
 
 use std::collections::HashMap;
 
@@ -24,6 +24,7 @@ const TILE_SCALE: f32 = 2.5;
 // Extend the LdtkFile object with whatever you need for your
 // game engine. In a real game you might need a variety of
 // fields to control how and when you use the LDtk information.
+
 struct Map {
     ldtk_file: Project,
     redraw: bool,
@@ -162,21 +163,16 @@ fn setup(
             })
     {
         let mut colors = Vec::new();
-        for values in layer.int_grid_values.iter() {
-            for (k, v) in values.iter() {
-                if k == &"color".to_string() {
-                    let val = v.as_ref().unwrap().as_str().unwrap();
-                    let clr = match Color::hex(&val[1..]) {
-                        Ok(t) => t,
-                        Err(e) => {
-                            println!("Error: {:?}", e);
-                            Color::BLUE
-                        }
-                    };
-                    let col_mat = materials.add(ColorMaterial::from(clr));
-                    colors.push(col_mat);
+        for i in layer.int_grid_values.iter() {
+            let clr = match Color::hex(&i.color[1..]){
+                Ok(t) => t,
+                Err(e) => {
+                    println!("Error: {:?}", e);
+                    Color::BLUE
                 }
-            }
+            };
+            let col_mat = materials.add(ColorMaterial::from(clr));
+            colors.push(col_mat);
         }
         visual_assets
             .int_grid_materials
@@ -314,18 +310,14 @@ fn update(commands: &mut Commands, mut map: ResMut<Map>, visual_assets: Res<Visu
                             layer.identifier
                         );
                         for tile in layer.int_grid.iter() {
-                            for (k, v) in tile {
-                                if k == "v" {
-                                    let v2 = v.as_ref().unwrap().as_i64().unwrap();
-                                    display_color(
-                                        layer_info,
-                                        tile,
-                                        commands,
-                                        visual_assets.int_grid_materials[&layer_uid][v2 as usize]
-                                            .clone(),
-                                    )
-                                }
-                            }
+                            display_color(
+                                layer_info,
+                                tile,
+                                commands,
+                                visual_assets.int_grid_materials[&layer_uid][tile.v as usize]
+                                    .clone(),
+                            )
+
                         }
                     }
                 }
@@ -424,17 +416,12 @@ fn display_entity(
     visual_assets: VisualAssets,
     extra_ent_defs: &ExtraEntDefs,
 ) {
-    let mut tileset_uid: i32 = 0;
-    let mut tile_uid: i32 = 0;
+    //let mut tileset_uid: i32 = 0;
+    //let mut tile_uid: i32 = 0;
     match &entity.tile {
         Some(t) => {
             // process tile asset
-
-            for (k, v) in t {
-                if k == "tilesetUid" {
-                    tileset_uid = v.as_ref().unwrap().as_i64().unwrap() as i32;
-                }
-            }
+            let tileset_uid = t.tileset_uid as i32;
             let handle: Handle<TextureAtlas> = visual_assets.spritesheets[&tileset_uid].clone();
             commands.spawn(SpriteSheetBundle {
                 transform: Transform {
@@ -486,18 +473,18 @@ fn display_entity(
 
 fn display_color(
     layer_info: LayerInfo,
-    tile: &HashMap<String, Option<serde_json::Value>>,
+    tile: &IntGridValueInstance,
     commands: &mut Commands,
     handle: Handle<ColorMaterial>,
 ) {
-    let mut coord_id: i64 = 0;
-    for (k, v) in tile.iter() {
-        if k == "coord_id" {
-            coord_id = v.as_ref().unwrap().as_i64().unwrap();
-        }
-    }
-    let x = coord_id as i32 % layer_info.grid_width;
-    let y = coord_id as i32 / layer_info.grid_width;
+    //let mut coord_id: i64 = 0;
+    //for (k, v) in tile.iter() {
+    //    if k == "coord_id" {
+    //        coord_id = v.as_ref().unwrap().as_i64().unwrap();
+    //    }
+    //}
+    let x = tile.coord_id as i32 % layer_info.grid_width;
+    let y = tile.coord_id as i32 / layer_info.grid_width;
     //println!("Tile ({},{}) is {}... {:?}", x, y, tile.v, handle);
     commands.spawn(SpriteBundle {
         material: handle,
