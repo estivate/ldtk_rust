@@ -1,6 +1,3 @@
-// TODO: needs major work to clean up for 0.6.3-preview...
-//
-//
 // This example is designed to try and cover as many use cases
 // as possible from a wide variety of LDtk source files. That's
 // great for an example file, but it's probably too complex if
@@ -58,10 +55,10 @@ struct LayerInfo {
     px_height: f32,
 }
 
-// There are a few things we need for entities that aren't
-// in the Entity Instances but over in the Entity Defs in
-// the LDtk JSON. In other words, we need to make a few
-// more "__field" fields.
+// The LDtk JSON is organized in two main sections, the "defs"
+// object define things and the "levels" object includes the 
+// level information. Most users can ignore the "defs" object, 
+// but if you want something from it, here's one way to do it.
 #[derive(Copy, Clone)]
 struct ExtraEntDefs {
     __tile_id: i32,
@@ -334,7 +331,6 @@ fn update(commands: &mut Commands, mut map: ResMut<Map>, visual_assets: Res<Visu
                             extra_ent_defs.__tile_id = 0;
                             extra_ent_defs.__width = ent.width as i32;
                             extra_ent_defs.__height = ent.height as i32;
-                            //__color: ent.color.clone(),
                         }
                         match ent.render_mode.as_ref().unwrap() {
                             ldtk_rust::RenderMode::Tile => {
@@ -416,8 +412,6 @@ fn display_entity(
     visual_assets: VisualAssets,
     extra_ent_defs: &ExtraEntDefs,
 ) {
-    //let mut tileset_uid: i32 = 0;
-    //let mut tile_uid: i32 = 0;
     match &entity.tile {
         Some(t) => {
             // process tile asset
@@ -477,15 +471,8 @@ fn display_color(
     commands: &mut Commands,
     handle: Handle<ColorMaterial>,
 ) {
-    //let mut coord_id: i64 = 0;
-    //for (k, v) in tile.iter() {
-    //    if k == "coord_id" {
-    //        coord_id = v.as_ref().unwrap().as_i64().unwrap();
-    //    }
-    //}
     let x = tile.coord_id as i32 % layer_info.grid_width;
     let y = tile.coord_id as i32 / layer_info.grid_width;
-    //println!("Tile ({},{}) is {}... {:?}", x, y, tile.v, handle);
     commands.spawn(SpriteBundle {
         material: handle,
         sprite: Sprite::new(Vec2::new(
@@ -523,10 +510,6 @@ fn convert_to_world(
     let world_x = (x as f32 * scale) + (grid_size as f32 * scale / 2.) - (width / 2.);
     let world_y = -(y as f32 * scale) - (grid_size as f32 * scale / 2.) + (height / 2.);
     let world_z = z as f32;
-    // println!(
-    //     "Drawing at {}, {}, {} with scale {}",
-    //     world_x, world_y, world_z, scale
-    // );
     Vec3::new(world_x, world_y, world_z)
 }
 

@@ -9,8 +9,8 @@ homepage = "https://github.com/estivate/ldtk_rust"
 documentation = "https://docs.rs/ldtk_rust/"
 repository = "https://github.com/estivate/ldtk_rust"
 readme = "README.md"
-keywords = ["ldtk", "game", "gamedev"]
-categories = ["games"]
+keywords = ["ldtk", "game", "gamedev", "map-editor"]
+categories = ["games", "game-development"]
 
 [dependencies]
 serde = {version = "1.0", features = ["derive"]}
