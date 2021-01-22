@@ -92,6 +92,7 @@ pub struct LdtkJson;
 
 // supports legacy name from 0.2.0 as well as
 // some QuickType examples over at LDTK.
+#[allow(deprecated)]
 impl LdtkJson {
     pub fn new(f: String) -> Project {
         Project::new(f)
