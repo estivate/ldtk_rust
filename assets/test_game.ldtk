@@ -2,12 +2,13 @@
 	"__header__": {
 		"fileType": "LDtk Project JSON",
 		"app": "LDtk",
-		"schema": "https://ldtk.io/json",
+		"doc": "https://ldtk.io/json",
+		"schema": "https://ldtk.io/files/JSON_SCHEMA.json",
 		"appAuthor": "Sebastien 'deepnight' Benard",
-		"appVersion": "0.6.2",
+		"appVersion": "0.7.0",
 		"url": "https://ldtk.io"
 	},
-	"jsonVersion": "0.6.2",
+	"jsonVersion": "0.7.0",
 	"defaultPivotX": 0,
 	"defaultPivotY": 0,
 	"defaultGridSize": 8,
@@ -15,7 +16,11 @@
 	"defaultLevelBgColor": "#1A1B2C",
 	"nextUid": 86,
 	"minifyJson": false,
+	"externalLevels": false,
 	"exportTiled": false,
+	"exportPng": false,
+	"backupOnSave": false,
+	"backupLimit": 10,
 	"worldLayout": "LinearHorizontal",
 	"worldGridWidth": 256,
 	"worldGridHeight": 256,
@@ -995,6 +1000,12 @@
 			"pxHei": 288,
 			"__bgColor": "#1A1B2C",
 			"bgColor": null,
+			"bgRelPath": null,
+			"bgPos": null,
+			"bgPivotX": 0.5,
+			"bgPivotY": 0.5,
+			"__bgPos": null,
+			"externalRelPath": null,
 			"layerInstances": [
 				{
 					"__identifier": "Entities",
@@ -1016,15 +1027,15 @@
 					"seed": 897348,
 					"gridTiles": [],
 					"entityInstances": [
-						{ "__identifier": "Bird", "__grid": [34,2], "__tile": { "tilesetUid": 18, "srcRect": [56,32,8,8] }, "defUid": 23, "px": [272,16], "fieldInstances": [{ "__identifier": "color", "__value": "#EA0CCC", "__type": "Color", "defUid": 25, "realEditorValues": [] }] },
-						{ "__identifier": "Enemy", "__grid": [9,11], "__tile": null, "defUid": 37, "px": [72,88], "fieldInstances": [] },
-						{ "__identifier": "Bird", "__grid": [27,9], "__tile": { "tilesetUid": 18, "srcRect": [56,32,8,8] }, "defUid": 23, "px": [216,72], "fieldInstances": [{ "__identifier": "color", "__value": "#EA0CCC", "__type": "Color", "defUid": 25, "realEditorValues": [] }] },
-						{ "__identifier": "Bird", "__grid": [42,14], "__tile": { "tilesetUid": 18, "srcRect": [56,32,8,8] }, "defUid": 23, "px": [336,112], "fieldInstances": [{ "__identifier": "color", "__value": "#EA0CCC", "__type": "Color", "defUid": 25, "realEditorValues": [] }] },
-						{ "__identifier": "Bird", "__grid": [25,27], "__tile": { "tilesetUid": 18, "srcRect": [56,32,8,8] }, "defUid": 23, "px": [200,216], "fieldInstances": [{ "__identifier": "color", "__value": "#EA0CCC", "__type": "Color", "defUid": 25, "realEditorValues": [] }] },
-						{ "__identifier": "Enemy", "__grid": [5,27], "__tile": null, "defUid": 37, "px": [40,216], "fieldInstances": [] },
-						{ "__identifier": "Enemy", "__grid": [40,15], "__tile": null, "defUid": 37, "px": [320,120], "fieldInstances": [] },
-						{ "__identifier": "Hero", "__grid": [10,1], "__tile": null, "defUid": 85, "px": [80,8], "fieldInstances": [] },
-						{ "__identifier": "Enemy", "__grid": [30,26], "__tile": null, "defUid": 37, "px": [240,208], "fieldInstances": [] }
+						{ "__identifier": "Bird", "__grid": [34,2], "__pivot": [0,0], "__tile": { "tilesetUid": 18, "srcRect": [56,32,8,8] }, "defUid": 23, "px": [272,16], "fieldInstances": [{ "__identifier": "color", "__value": "#EA0CCC", "__type": "Color", "defUid": 25, "realEditorValues": [] }] },
+						{ "__identifier": "Enemy", "__grid": [11,11], "__pivot": [0,0], "__tile": null, "defUid": 37, "px": [88,88], "fieldInstances": [] },
+						{ "__identifier": "Bird", "__grid": [27,9], "__pivot": [0,0], "__tile": { "tilesetUid": 18, "srcRect": [56,32,8,8] }, "defUid": 23, "px": [216,72], "fieldInstances": [{ "__identifier": "color", "__value": "#EA0CCC", "__type": "Color", "defUid": 25, "realEditorValues": [] }] },
+						{ "__identifier": "Bird", "__grid": [42,14], "__pivot": [0,0], "__tile": { "tilesetUid": 18, "srcRect": [56,32,8,8] }, "defUid": 23, "px": [336,112], "fieldInstances": [{ "__identifier": "color", "__value": "#EA0CCC", "__type": "Color", "defUid": 25, "realEditorValues": [] }] },
+						{ "__identifier": "Bird", "__grid": [25,27], "__pivot": [0,0], "__tile": { "tilesetUid": 18, "srcRect": [56,32,8,8] }, "defUid": 23, "px": [200,216], "fieldInstances": [{ "__identifier": "color", "__value": "#EA0CCC", "__type": "Color", "defUid": 25, "realEditorValues": [] }] },
+						{ "__identifier": "Enemy", "__grid": [5,27], "__pivot": [0,0], "__tile": null, "defUid": 37, "px": [40,216], "fieldInstances": [] },
+						{ "__identifier": "Enemy", "__grid": [40,15], "__pivot": [0,0], "__tile": null, "defUid": 37, "px": [320,120], "fieldInstances": [] },
+						{ "__identifier": "Hero", "__grid": [10,1], "__pivot": [0,0], "__tile": null, "defUid": 85, "px": [80,8], "fieldInstances": [] },
+						{ "__identifier": "Enemy", "__grid": [30,26], "__pivot": [0,0], "__tile": null, "defUid": 37, "px": [240,208], "fieldInstances": [] }
 					]
 				},
 				{

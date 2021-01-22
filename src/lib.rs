@@ -4,26 +4,19 @@
 //! See /examples directory for more.
 //!
 
-// mod definitions;
-// pub mod ldtk_file;
-// mod levels;
-
-// pub use definitions::*;
-// pub use ldtk_file::LdtkFile;
-// pub use levels::*;
-mod json_0_6_3;
+mod json_0_7_0;
 use std::{fs::File, path::Path};
 
-pub use json_0_6_3::*;
+pub use json_0_7_0::*;
 
 // this struct name has to match the auto-generated top-level struct.
 // Currently mirroring the LDTK Haxe API as best I can figure out.
 impl Project {
 
     pub fn new(f: String) -> Self {
-        let mut o = Project::load_project(f);
+        let mut o = Project::load_project(f.clone());
         if o.external_levels {
-            o.load_external_levels();
+            o.load_external_levels(f);
         }
         o
     }
@@ -44,7 +37,7 @@ impl Project {
     }
 
     // Read in ALL the external level files referred to in an LDTK Project
-    pub fn load_external_levels(&mut self) {
+    pub fn load_external_levels(&mut self, f: String) {
         // check to make sure there ARE separate levels
         // if not, then likely the call to this method
         // should do nothing because you already have
@@ -61,10 +54,13 @@ impl Project {
             self.clear_levels();
 
             // now add each of them to our struct
-            // TODO: remove hard-coded file path
             for file in all_level_files.iter() {
-                let mut full_path = "assets/".to_string();
+                let mut full_path: String = String::new();
+                let parent = Path::new(&f).parent().unwrap().to_str().unwrap(); 
+                full_path.push_str(parent);
+                full_path.push_str("/");
                 full_path.push_str(&file.to_string());
+                println!("opening {:#?}", full_path);
                 let level_ldtk = Level::new(full_path);
                 self.levels.push(level_ldtk);
             }
