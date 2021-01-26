@@ -15,7 +15,7 @@ use ldtk_rust::{EntityInstance, Project, TileInstance, IntGridValueInstance};
 use std::collections::HashMap;
 
 // Constants
-const LDTK_FILE_PATH: &str = "assets/test_game.ldtk";
+const LDTK_FILE_PATH: &str = "assets/game_0-7-1.ldtk";
 const TILE_SCALE: f32 = 2.5;
 
 // Extend the LdtkFile object with whatever you need for your
