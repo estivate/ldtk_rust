@@ -128,6 +128,11 @@ fn setup(
     // assigns as the tileset's UID. If you know you only have one tileset
     // asset, you could simplify this and just load it like any other asset
     // using map.ldtk_file.defs.tilesets[0].rel_path
+    //
+    // Note that LDTK seems to be okay processing image files with pixel
+    // dimensions that don't divide evenly by the tile size, but Bevy isn't.
+    // Best to make sure your width/height are divisible evenly by your tile
+    // size.
     for tileset in map.ldtk_file.defs.as_ref().unwrap().tilesets.iter() {
         let texture_handle = asset_server.load(&tileset.rel_path[..]);
 
