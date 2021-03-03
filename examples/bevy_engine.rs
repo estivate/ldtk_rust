@@ -10,12 +10,12 @@
 
 use bevy::prelude::*;
 use bevy::render::pass::ClearColor;
-use ldtk_rust::{EntityInstance, Project, TileInstance, IntGridValueInstance};
+use ldtk_rust::{EntityInstance, Project, TileInstance};
 
 use std::collections::HashMap;
 
 // Constants
-const LDTK_FILE_PATH: &str = "assets/game_0-7-1.ldtk";
+const LDTK_FILE_PATH: &str = "assets/game_0-8-1.ldtk";
 const TILE_SCALE: f32 = 2.5;
 
 // Extend the LdtkFile object with whatever you need for your
@@ -133,7 +133,7 @@ fn setup(
     // dimensions that don't divide evenly by the tile size, but Bevy isn't.
     // Best to make sure your width/height are divisible evenly by your tile
     // size.
-    for tileset in map.ldtk_file.defs.as_ref().unwrap().tilesets.iter() {
+    for tileset in map.ldtk_file.defs.tilesets.iter() {
         let texture_handle = asset_server.load(&tileset.rel_path[..]);
 
         let texture_atlas = TextureAtlas::from_grid(
@@ -156,10 +156,9 @@ fn setup(
     for layer in
         map.ldtk_file
             .defs
-            .as_ref().unwrap()
             .layers
             .iter()
-            .filter(|f| match f.purple_type.as_ref().unwrap() {
+            .filter(|f| match f.purple_type {
                 ldtk_rust::Type::IntGrid => true,
                 _ => false,
             })
@@ -184,7 +183,7 @@ fn setup(
     // LDtk supports placement of Entities in levels (player, chest, health potion, etc.)
     // If you are using this feature you may want to do additional setup here beyond
     // loading in the tilemap assets above.
-    for ent in map.ldtk_file.defs.as_ref().unwrap().entities.iter() {
+    for ent in map.ldtk_file.defs.entities.iter() {
         let clr = match Color::hex(&ent.color.clone()[1..]) {
             Ok(t) => t,
             Err(e) => {
@@ -311,12 +310,12 @@ fn update(commands: &mut Commands, mut map: ResMut<Map>, visual_assets: Res<Visu
                             "Generating IntGrid Layer w/ Color Materials: {}",
                             layer.identifier
                         );
-                        for tile in layer.int_grid.iter() {
+                        for tile in layer.int_grid_csv.iter() {
                             display_color(
                                 layer_info,
                                 tile,
                                 commands,
-                                visual_assets.int_grid_materials[&layer_uid][tile.v as usize]
+                                visual_assets.int_grid_materials[&layer_uid][*tile as usize]
                                     .clone(),
                             )
 
@@ -331,16 +330,16 @@ fn update(commands: &mut Commands, mut map: ResMut<Map>, visual_assets: Res<Visu
                     // we need some extra fields from the defs section of the
                     // JSON that aren't included in the entity instances.
                     let mut extra_ent_defs = ExtraEntDefs::new();
-                    for ent in map.ldtk_file.defs.as_ref().unwrap().entities.iter() {
+                    for ent in map.ldtk_file.defs.entities.iter() {
                         if ent.uid == entity.def_uid {
                             extra_ent_defs.__tile_id = 0;
                             extra_ent_defs.__width = ent.width as i32;
                             extra_ent_defs.__height = ent.height as i32;
                         }
-                        match ent.render_mode.as_ref().unwrap() {
+                        match ent.render_mode {
                             ldtk_rust::RenderMode::Tile => {
                                 extra_ent_defs.__tile_id = ent.tile_id.unwrap() as i32;
-                                for ts in map.ldtk_file.defs.as_ref().unwrap().tilesets.iter() {
+                                for ts in map.ldtk_file.defs.tilesets.iter() {
                                     if ts.uid == ent.tileset_id.unwrap() {
                                         extra_ent_defs.__scale =
                                             ent.width as f32 / ts.tile_grid_size as f32;
@@ -472,12 +471,12 @@ fn display_entity(
 
 fn display_color(
     layer_info: LayerInfo,
-    tile: &IntGridValueInstance,
+    tile: &i64,
     commands: &mut Commands,
     handle: Handle<ColorMaterial>,
 ) {
-    let x = tile.coord_id as i32 % layer_info.grid_width;
-    let y = tile.coord_id as i32 / layer_info.grid_width;
+    let x = *tile as i32 % layer_info.grid_width;
+    let y = *tile as i32 / layer_info.grid_width;
     commands.spawn(SpriteBundle {
         material: handle,
         sprite: Sprite::new(Vec2::new(
