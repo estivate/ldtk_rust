@@ -13,8 +13,8 @@ auto-tiling rules, entity placement and more.
 This library works with LDtk version `0.8.1` and supports the optional external
 level files. LDtk updates save files automatically, so there's no reason to be
 on an older version, but if you are (or if you get a new version before this
-crate is updated) you can follow the process below to generate code against whatever
-LDtk version you want to use.
+crate is updated) you can follow the [process below](#using-other-versions) to
+generate code against whatever LDtk version you want to use.
 
 ## Getting Started
 
@@ -52,10 +52,9 @@ the example is on the process, not the Bevy-specific code. If you
 are using another game engine the example will hopefully still be understandable 
 and useful.
 
-## Making this project work with other versions of LDtk (older or newer)
+## Using Other Versions of LDtk (older or newer)
 
-LDtk includes a  
-[JSON schema](https://github.com/deepnight/ldtk/blob/master/docs/JSON_SCHEMA.json)
+LDtk includes a [JSON schema](https://github.com/deepnight/ldtk/blob/master/docs/JSON_SCHEMA.json)
 that can be used to auto-generate RUST code to unmarshal the JSON. Alls you do is:
 
 1. Clone this project
