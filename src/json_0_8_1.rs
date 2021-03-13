@@ -265,7 +265,7 @@ pub struct EnumValueDefinition {
     /// An array of 4 Int values that refers to the tile in the tileset image: `[ x, y, width,
     /// height ]`
     #[serde(rename = "__tileSrcRect")]
-    pub tile_src_rect: Vec<i64>,
+    pub tile_src_rect: Option<Vec<i64>>,
     /// Enum value
     pub id: String,
     /// The optional ID of the tile
