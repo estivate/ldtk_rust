@@ -10,7 +10,7 @@ auto-tiling rules, entity placement and more.
 
 ## Status
 
-This library works with LDtk version `0.8.1` and supports the optional external
+This library works with LDtk version `0.9.0` and supports the optional external
 level files. LDtk updates save files automatically, so there's no reason to be
 on an older version, but if you are (or if you get a new version before this
 crate is updated) you can follow the [process below](#using-other-versions-of-ldtk-older-or-newer) to
