@@ -68,7 +68,7 @@ The Schema is in the `docs/` directory.
 3. On the left, set the "name" to "Project" and the "Source type" to "JSON Schema"
 4. On the right choose the Rust language and set field visibility to "Public".
 5. Save the resulting file to the /src subdirectory of this project 
-6. Change the serde import line near the top of the file to "use serde::*". You 
+6. Change the serde import line near the top of the file to "use serde::*;". You 
 can view the other `.rs` version files to see this.
 7. Change the `mod` and `pub use` lines at the top of `lib.rs` (in the same
 directory you're working in already) to include your new file instead.
