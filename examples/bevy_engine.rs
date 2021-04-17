@@ -7,6 +7,9 @@
 // by referencing it directly from the LdtkFile instance instead
 // of looping through and matching for all the options like I
 // do here.
+//
+// Also, I'm not a Bevy expert so I'd welcome corrections 
+// and/or better examples.
 
 use bevy::prelude::*;
 use bevy::render::pass::ClearColor;
@@ -15,7 +18,7 @@ use ldtk_rust::{EntityInstance, Project, TileInstance};
 use std::collections::HashMap;
 
 // Constants
-const LDTK_FILE_PATH: &str = "assets/game_0-9-0.ldtk";
+const LDTK_FILE_PATH: &str = "assets/game_0-9-1.ldtk";
 const TILE_SCALE: f32 = 2.5;
 
 // Extend the LdtkFile object with whatever you need for your
@@ -83,7 +86,7 @@ impl ExtraEntDefs {
 // startup and then running update() every game loop.
 fn main() {
     App::build()
-        .add_resource(WindowDescriptor {
+        .insert_resource(WindowDescriptor {
             title: "title".to_string(),
             width: 1024.0,
             height: 768.0,
@@ -101,7 +104,7 @@ fn main() {
 // Finally it saves the LdtkFile instance and handles to all the
 // assets as Bevy Resources, which makes them "globals".
 fn setup(
-    commands: &mut Commands,
+    mut commands: Commands,
     asset_server: Res<AssetServer>,
     mut materials: ResMut<Assets<ColorMaterial>>,
     mut texture_atlases: ResMut<Assets<TextureAtlas>>,
@@ -199,16 +202,17 @@ fn setup(
     }
 
     // add the LDtk object and the tile assets as resources and spawn a camera
-    commands
-        .insert_resource(map)
-        .insert_resource(visual_assets)
-        .spawn(Camera2dBundle::default());
+    let mut camera = OrthographicCameraBundle::new_2d();
+    camera.transform = Transform::from_translation(Vec3::new(0.0, 0.0, 50.0));
+    commands.insert_resource(map);
+    commands.insert_resource(visual_assets);
+    commands.spawn().insert_bundle(camera);
 }
 
 // Our update system runs every game loop and, if the tiles are not spawned, will spawn them.
 // In practice you'll likely want to split some of this up, but it's a decent start to
 // having the ability to regenerate tiles as the current level changes, etc.
-fn update(commands: &mut Commands, mut map: ResMut<Map>, visual_assets: Res<VisualAssets>) {
+fn update(mut commands: Commands, mut map: ResMut<Map>, visual_assets: Res<VisualAssets>) {
     // If we don't need to redraw the tiles, go ahead and return (do nothing)
     if !map.redraw {
         return;
@@ -272,7 +276,7 @@ fn update(commands: &mut Commands, mut map: ResMut<Map>, visual_assets: Res<Visu
                     display_tile(
                         layer_info,
                         tile,
-                        commands,
+                        &mut commands,
                         visual_assets.spritesheets[&tileset_uid].clone(),
                     );
                 }
@@ -283,7 +287,7 @@ fn update(commands: &mut Commands, mut map: ResMut<Map>, visual_assets: Res<Visu
                     display_tile(
                         layer_info,
                         tile,
-                        commands,
+                        &mut commands,
                         visual_assets.spritesheets[&tileset_uid].clone(),
                     );
                 }
@@ -298,7 +302,7 @@ fn update(commands: &mut Commands, mut map: ResMut<Map>, visual_assets: Res<Visu
                             display_tile(
                                 layer_info,
                                 tile,
-                                commands,
+                                & mut commands,
                                 visual_assets.spritesheets[&i].clone(),
                             );
                         }
@@ -314,7 +318,7 @@ fn update(commands: &mut Commands, mut map: ResMut<Map>, visual_assets: Res<Visu
                             display_color(
                                 layer_info,
                                 tile,
-                                commands,
+                                &mut commands,
                                 visual_assets.int_grid_materials[&layer_uid][*tile as usize]
                                     .clone(),
                             )
@@ -353,7 +357,7 @@ fn update(commands: &mut Commands, mut map: ResMut<Map>, visual_assets: Res<Visu
                     display_entity(
                         layer_info,
                         entity,
-                        commands,
+                        &mut commands,
                         visual_assets.clone(),
                         &extra_ent_defs,
                     );
@@ -387,7 +391,7 @@ fn display_tile(
         }
         _ => (),
     }
-    commands.spawn(SpriteSheetBundle {
+    commands.spawn().insert_bundle(SpriteSheetBundle {
         transform: Transform {
             translation: convert_to_world(
                 layer_info.px_width,
@@ -421,7 +425,7 @@ fn display_entity(
             // process tile asset
             let tileset_uid = t.tileset_uid as i32;
             let handle: Handle<TextureAtlas> = visual_assets.spritesheets[&tileset_uid].clone();
-            commands.spawn(SpriteSheetBundle {
+            commands.spawn().insert_bundle(SpriteSheetBundle {
                 transform: Transform {
                     translation: convert_to_world(
                         layer_info.px_width,
@@ -444,7 +448,7 @@ fn display_entity(
             // process color shape
             let handle: Handle<ColorMaterial> =
                 visual_assets.entity_materials[&(entity.def_uid as i32)].clone();
-            commands.spawn(SpriteBundle {
+            commands.spawn().insert_bundle(SpriteBundle {
                 material: handle,
                 sprite: Sprite::new(Vec2::new(
                     extra_ent_defs.__width as f32,
@@ -477,7 +481,7 @@ fn display_color(
 ) {
     let x = *tile as i32 % layer_info.grid_width;
     let y = *tile as i32 / layer_info.grid_width;
-    commands.spawn(SpriteBundle {
+    commands.spawn().insert_bundle(SpriteBundle {
         material: handle,
         sprite: Sprite::new(Vec2::new(
             layer_info.grid_cell_size as f32,
