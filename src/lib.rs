@@ -12,7 +12,10 @@
 //!
 
 mod json_0_9_3;
-use std::{fs::File, path::Path};
+use std::{
+    fs::File,
+    path::{Path, PathBuf},
+};
 
 pub use json_0_9_3::*;
 
@@ -49,10 +52,10 @@ impl Project {
         // the levels.
         if self.external_levels {
             // get all the file names
-            let mut all_level_files: Vec<String> = Vec::new();
+            let mut all_level_files: Vec<PathBuf> = Vec::new();
             for level in self.levels.iter_mut() {
                 let level_file_path = level.external_rel_path.as_ref().expect("missing level");
-                all_level_files.push(level_file_path.to_string());
+                all_level_files.push(level_file_path.into());
             }
 
             // get rid of existing levels (which don't have much data)
@@ -60,11 +63,11 @@ impl Project {
 
             // now add each of them to our struct
             for file in all_level_files.iter() {
-                let mut full_path: String = String::new();
+                let mut full_path = PathBuf::new();
                 let parent = f.as_ref().parent().unwrap().to_str().unwrap();
-                full_path.push_str(parent);
-                full_path.push_str("/");
-                full_path.push_str(&file.to_string());
+                full_path.push(parent);
+                full_path.push("/");
+                full_path.push(&file);
                 println!("opening {:#?}", full_path);
                 let level_ldtk = Level::new(full_path);
                 self.levels.push(level_ldtk);
