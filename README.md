@@ -27,8 +27,7 @@ populate a struct that closely resembles the [LDtk JSON format](https://ldtk.io/
 use ldtk_rust::Project;
 
 fn main() {
-    let file_path = "assets/test_game.ldtk".to_string();
-    let ldtk = Project::new(file_path);
+    let ldtk = Project::new( "assets/test_game.ldtk");
     println!("First level pixel height is {}!", ldtk.levels[0].px_hei);
 }
 ```
