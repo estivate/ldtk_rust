@@ -1,10 +1,10 @@
 use ldtk_rust::{Level, Project};
 
 const BASE_DIR: &str = "assets/";
-const PROJECT_FILE: &str = "SeparateLevelFiles.ldtk";
+const PROJECT_FILE: &str = "SeparateLevelFiles-beta1.ldtk";
 
 fn main() {
-    let current_level_uid: i64 = 3;
+    let current_level_uid: i64 = 0;
     let mut current_level_path: Option<String> = None;
     let mut current_level_data: Option<Level> = None;
 
