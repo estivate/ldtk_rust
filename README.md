@@ -10,7 +10,7 @@ auto-tiling rules, entity placement and more.
 
 ## Status
 
-This library works with LDtk version `0.9.3` and supports the optional external
+This library works with LDtk version `1.0.0` and supports the optional external
 level files. LDtk updates save files automatically, so there's no reason to be
 on an older version, but if you are (or if you get a new version before this
 crate is updated) you can follow the [process below](#using-with-older-or-newer-version-of-ldtk) to
@@ -84,6 +84,14 @@ Last time I tested the Rust version, I needed to tweak the serde line at the top
 the instructions below and reviewing the `lib.rs` file.
 
 ## Using With Older or Newer Version of LDtk
+
+> You can enable older versions with features - just remember to disable default features and enable only one schema version feature:
+> ```toml
+> [dependencies.ldtk_rust]
+> version = "*"
+> default-features = false
+> features = ["json_0_9_3"]
+> ```
 
 LDtk includes a [JSON schema](https://github.com/deepnight/ldtk/blob/master/docs/JSON_SCHEMA.json)
 that can be used to auto-generate RUST code to unmarshal the JSON.

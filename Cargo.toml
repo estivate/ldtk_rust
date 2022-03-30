@@ -1,6 +1,6 @@
 [package]
 name = "ldtk_rust"
-version = "0.5.2"
+version = "0.5.3"
 authors = ["Blake Ellis <blake@colormaria.com>"]
 edition = "2018"
 license = "MIT"
@@ -21,7 +21,6 @@ bevy = "0.5.0"
 
 [features]
 default = ["json_1_0_0"]
-# Mke sure you enable only one schema version and disable default feature in case of using any other than latest one!
 json_1_0_0 = []
 json_0_10_beta2 = []
 json_0_10_beta1 = []
