@@ -11,13 +11,29 @@
 //!     Level::new(f: Path) --- loads a single external level file
 //!
 
-mod json_0_10_beta1;
+macro_rules! import_schema {
+    ($id:ident, $feature:literal) => {
+        #[cfg(feature = $feature)]
+        mod $id;
+        #[cfg(feature = $feature)]
+        pub use $id::*;
+    };
+}
+
+import_schema! {json_1_0_0,"json_1_0_0"}
+import_schema! {json_0_10_beta2,"json_0_10_beta2"}
+import_schema! {json_0_10_beta1,"json_0_10_beta1"}
+import_schema! {json_0_9_3,"json_0_9_3"}
+import_schema! {json_0_9_2,"json_0_9_2"}
+import_schema! {json_0_8_1,"json_0_8_1"}
+import_schema! {json_0_7_0,"json_0_7_0"}
+import_schema! {json_0_6_4,"json_0_6_4"}
+import_schema! {json_0_6_3,"json_0_6_3"}
+
 use std::{
     fs::File,
     path::{Path, PathBuf},
 };
-
-pub use json_0_10_beta1::*;
 
 // this struct name has to match the auto-generated top-level struct.
 // Currently mirroring the LDTK Haxe API as best I can figure out.

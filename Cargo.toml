@@ -18,3 +18,16 @@ serde_json = "1.0"
 
 [dev-dependencies]
 bevy = "0.5.0"
+
+[features]
+default = ["json_1_0_0"]
+# Mke sure you enable only one schema version and disable default feature in case of using any other than latest one!
+json_1_0_0 = []
+json_0_10_beta2 = []
+json_0_10_beta1 = []
+json_0_9_3 = []
+json_0_9_2 = []
+json_0_8_1 = []
+json_0_7_0 = []
+json_0_6_4 = []
+json_0_6_3 = []
