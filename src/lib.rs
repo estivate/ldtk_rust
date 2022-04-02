@@ -6,10 +6,11 @@
 //! all of your LDtk data. See the library's /examples subdirectory for more
 //! detailed examples.
 //!
-//!     Project::new(f: Path) --- loads all the data
-//!     Project::load_project(f: Path) --- loads only the project file
-//!     Level::new(f: Path) --- loads a single external level file
-//!
+//! ```ignore
+//! Project::new(f: Path) --- loads all the data
+//! Project::load_project(f: Path) --- loads only the project file
+//! Level::new(f: Path) --- loads a single external level file
+//! ```
 
 mod json_1_1_0;
 

@@ -1,7 +1,7 @@
 use ldtk_rust::{Level, Project};
 
 const BASE_DIR: &str = "assets/";
-const PROJECT_FILE: &str = "SeparateLevelFiles-beta1.ldtk";
+const PROJECT_FILE: &str = "SeparateLevelFiles.ldtk";
 
 fn main() {
     let current_level_uid: i64 = 0;
