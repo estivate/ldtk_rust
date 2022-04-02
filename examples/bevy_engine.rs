@@ -8,7 +8,7 @@
 // of looping through and matching for all the options like I
 // do here.
 //
-// Also, I'm not a Bevy expert so I'd welcome corrections 
+// Also, I'm not a Bevy expert so I'd welcome corrections
 // and/or better examples.
 
 use bevy::prelude::*;
@@ -59,8 +59,8 @@ struct LayerInfo {
 }
 
 // The LDtk JSON is organized in two main sections, the "defs"
-// object define things and the "levels" object includes the 
-// level information. Most users can ignore the "defs" object, 
+// object define things and the "levels" object includes the
+// level information. Most users can ignore the "defs" object,
 // but if you want something from it, here's one way to do it.
 #[derive(Copy, Clone)]
 struct ExtraEntDefs {
@@ -156,19 +156,19 @@ fn setup(
     // materials for each integer value. The Bevy snake tutorial has some good sample
     // code for using materials: https://mbuffett.com/posts/bevy-snake-tutorial/
 
-    for layer in
-        map.ldtk_file
-            .defs
-            .layers
-            .iter()
-            .filter(|f| match f.purple_type {
-                ldtk_rust::Type::IntGrid => true,
-                _ => false,
-            })
+    for layer in map
+        .ldtk_file
+        .defs
+        .layers
+        .iter()
+        .filter(|f| match f.purple_type {
+            ldtk_rust::Type::IntGrid => true,
+            _ => false,
+        })
     {
         let mut colors = Vec::new();
         for i in layer.int_grid_values.iter() {
-            let clr = match Color::hex(&i.color[1..]){
+            let clr = match Color::hex(&i.color[1..]) {
                 Ok(t) => t,
                 Err(e) => {
                     println!("Error: {:?}", e);
@@ -302,7 +302,7 @@ fn update(mut commands: Commands, mut map: ResMut<Map>, visual_assets: Res<Visua
                             display_tile(
                                 layer_info,
                                 tile,
-                                & mut commands,
+                                &mut commands,
                                 visual_assets.spritesheets[&i].clone(),
                             );
                         }
@@ -322,7 +322,6 @@ fn update(mut commands: Commands, mut map: ResMut<Map>, visual_assets: Res<Visua
                                 visual_assets.int_grid_materials[&layer_uid][*tile as usize]
                                     .clone(),
                             )
-
                         }
                     }
                 }

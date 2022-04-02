@@ -11,13 +11,13 @@
 //!     Level::new(f: Path) --- loads a single external level file
 //!
 
-mod json_0_10_beta1;
+mod json_1_1_0;
+
+pub use json_1_1_0::*;
 use std::{
     fs::File,
     path::{Path, PathBuf},
 };
-
-pub use json_0_10_beta1::*;
 
 // this struct name has to match the auto-generated top-level struct.
 // Currently mirroring the LDTK Haxe API as best I can figure out.

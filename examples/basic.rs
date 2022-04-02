@@ -4,7 +4,7 @@ use ldtk_rust::Project;
 fn main() {
     let file_path = "assets/game_0-10-beta1.ldtk".to_string();
     let project: Project = Project::new(file_path);
-    
+
     //println!("First level pixel height is {}!", project.levels[0].px_hei);
     println!("First level pixel height is {}!", project.levels[0].px_hei);
 }
