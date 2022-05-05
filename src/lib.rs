@@ -12,9 +12,9 @@
 //! Level::new(f: Path) --- loads a single external level file
 //! ```
 
-mod json_1_1_0;
+mod json_1_1_3;
 
-pub use json_1_1_0::*;
+pub use json_1_1_3::*;
 use std::{
     fs::File,
     path::{Path, PathBuf},
