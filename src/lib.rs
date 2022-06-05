@@ -17,7 +17,7 @@ mod json_1_1_3;
 pub use json_1_1_3::*;
 use std::{
     fs::File,
-    path::{Path, PathBuf},
+    path::{Path, PathBuf}, io::BufReader,
 };
 
 // this struct name has to match the auto-generated top-level struct.
@@ -33,8 +33,14 @@ impl Project {
 
     // Read in an LDTK project file
     pub fn load_project<P: AsRef<Path>>(f: P) -> Self {
-        let file = File::open(f).expect("project file not found");
+        //let file = File::open(f).expect("project file not found");
+        let file = BufReader::new(File::open(f).expect("level file not found"));
         let o: Project = serde_json::from_reader(file).expect("error while reading");
+        o
+    }
+
+    pub fn from_buf(b: BufReader<File>) -> Self {
+        let o: Project = serde_json::from_reader(b).expect("error while reading");
         o
     }
 
