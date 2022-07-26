@@ -44,6 +44,11 @@ impl Project {
         o
     }
 
+    pub fn from_slice(b: &[u8]) -> Self {
+        let o: Project = serde_json::from_slice(b).expect("error while reading");
+        o
+    }
+
     // Remove any items in the project.levels Vec ... useful when you
     // get external file info and want to replace the items with more
     // complete data extrated from the files.
