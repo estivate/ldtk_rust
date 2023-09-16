@@ -6,16 +6,16 @@
 //const LDTK_FILE_PATH: &str = "assets/game_1-1-3.ldtk";
 
 fn main() {
-//     App::new()
-//         .insert_resource(WindowDescriptor {
-//             title: "title".to_string(),
-//             width: 1024.0,
-//             height: 768.0,
-//             ..Default::default()
-//         })
-//         .add_plugins(DefaultPlugins)
-//         .add_startup_system(setup_camera)
-//         .run();
+    //     App::new()
+    //         .insert_resource(WindowDescriptor {
+    //             title: "title".to_string(),
+    //             width: 1024.0,
+    //             height: 768.0,
+    //             ..Default::default()
+    //         })
+    //         .add_plugins(DefaultPlugins)
+    //         .add_startup_system(setup_camera)
+    //         .run();
 }
 
 // fn setup_camera(mut commands: Commands) {
