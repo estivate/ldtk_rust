@@ -31,5 +31,6 @@ default = ["1_3_3"]
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 
-[dev-dependencies]
-bevy = "0.7.0"
+# TODO: Uncomment when example using Bevy gets done.
+# [dev-dependencies]
+# bevy = "0.7.0"
