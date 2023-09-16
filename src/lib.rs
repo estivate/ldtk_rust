@@ -12,12 +12,32 @@
 //! Level::new(f: Path) --- loads a single external level file
 //! ```
 
-mod json_1_1_3;
+macro_rules! try_use_versioned {
+    ($feature:literal => $module:ident) => {
+        #[cfg(feature = $feature)]
+        mod $module;
+        #[cfg(feature = $feature)]
+        pub use $module::*;
+    };
+}
 
-pub use json_1_1_3::*;
+try_use_versioned!("1_3_3" => json_1_3_3);
+try_use_versioned!("1_1_3" => json_1_1_3);
+try_use_versioned!("1_1_0" => json_1_1_0);
+try_use_versioned!("1_0_0" => json_1_0_0);
+try_use_versioned!("0_10_beta2" => json_0_10_beta2);
+try_use_versioned!("0_10_beta1" => json_0_10_beta1);
+try_use_versioned!("0_9_3" => json_0_9_3);
+try_use_versioned!("0_9_2" => json_0_9_2);
+try_use_versioned!("0_8_1" => json_0_8_1);
+try_use_versioned!("0_7_0" => json_0_7_0);
+try_use_versioned!("0_6_4" => json_0_6_4);
+try_use_versioned!("0_6_3" => json_0_6_3);
+
 use std::{
     fs::File,
-    path::{Path, PathBuf}, io::BufReader,
+    io::BufReader,
+    path::{Path, PathBuf},
 };
 
 // this struct name has to match the auto-generated top-level struct.

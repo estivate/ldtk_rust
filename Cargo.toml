@@ -12,8 +12,23 @@ readme = "README.md"
 keywords = ["ldtk", "game", "gamedev", "map-editor"]
 categories = ["games", "game-development"]
 
+[features]
+default = ["1_3_3"]
+1_3_3 = []
+1_1_3 = []
+1_1_0 = []
+1_0_0 = []
+0_10_beta2 = []
+0_10_beta1 = []
+0_9_3 = []
+0_9_2 = []
+0_8_1 = []
+0_7_0 = []
+0_6_4 = []
+0_6_3 = []
+
 [dependencies]
-serde = {version = "1.0", features = ["derive"]}
+serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 
 [dev-dependencies]

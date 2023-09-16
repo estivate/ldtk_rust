@@ -9,7 +9,7 @@ auto-tiling rules, entity placement and more.
 
 ## Status
 
-This library works with LDtk version `1.1.3` and supports the optional external
+This library works with LDtk version `1.3.3` and supports the optional external
 level files. LDtk updates save files automatically, so there's no reason to be
 on an older version, but if you are (or if you get a new version before this
 crate is updated) you can follow the [process below](#using-with-older-or-newer-version-of-ldtk) to
@@ -82,12 +82,10 @@ Last time I tested the Rust version, I needed to tweak the serde line at the top
 * Embed the JSON conversion in your game (removing any dependencies) by following
 the instructions below and reviewing the `lib.rs` file.
 
-## Using With Older or Newer Version of LDtk
+## Adding new LDtk JSON schema version
 
 LDtk includes a [JSON schema](https://github.com/deepnight/ldtk/blob/master/docs/JSON_SCHEMA.json)
 that can be used to auto-generate RUST code to unmarshal the JSON.
-
-To use this library with an older (or newer) version of the LDtk Schema:
 
 1. Clone this project
 2. Check the [/src](https://github.com/estivate/ldtk_rust/tree/master/src)
@@ -102,11 +100,21 @@ The Schema is in the `docs/` directory.
 6. Save the resulting file to the /src subdirectory of this project 
 7. Change the serde import line near the top of the file to "use serde::*;". You 
 can view the other `.rs` version files to see this.
-8. Change the `mod` and `pub use` lines at the top of `lib.rs` (in the same
-directory you're working in already) to include your new file instead.
+8. Add version feature to Cargo.toml (for example: `0.0.0` JSON schema version changes to `0_0_0` feature name) and set it in `default`.
+9. Add `try_use_versioned!("0_0_0" => json_0_0_0);` in `lib.rs` file, replacing `0_0_0` with the JSON schema version you are adding.
 
 You'll need to adjust your Cargo.toml file to use your project instead of this
 one (or contribute your change back here).
+
+## Using specific version of JSON schema
+
+When you use `ldtk_rust` dependency, it will use latest JSON schema present.
+To use specific version of JSON schema, do:
+```toml
+[dependencies]
+ldtk_rist = { version = "0.0.0", default-features = false, features = ["0_0_0"] }
+```
+replacing `0.0.0` and `0_0_0` with JSON schema version you want to use.
 
 ## How To Not Use This Library
 

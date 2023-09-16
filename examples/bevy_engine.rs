@@ -7,15 +7,15 @@ use bevy::prelude::*;
 
 fn main() {
     App::new()
-    .insert_resource(WindowDescriptor {
-        title: "title".to_string(),
-        width: 1024.0,
-        height: 768.0,
-        ..Default::default()
-    })
-    .add_plugins(DefaultPlugins)
-    .add_startup_system(setup_camera)
-    .run();
+        .insert_resource(WindowDescriptor {
+            title: "title".to_string(),
+            width: 1024.0,
+            height: 768.0,
+            ..Default::default()
+        })
+        .add_plugins(DefaultPlugins)
+        .add_startup_system(setup_camera)
+        .run();
 }
 
 fn setup_camera(mut commands: Commands) {
