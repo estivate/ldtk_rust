@@ -112,7 +112,7 @@ When you use `ldtk_rust` dependency, it will use latest JSON schema present.
 To use specific version of JSON schema, do:
 ```toml
 [dependencies]
-ldtk_rist = { version = "0.0.0", default-features = false, features = ["0_0_0"] }
+ldtk_rust = { version = "0.0.0", default-features = false, features = ["0_0_0"] }
 ```
 replacing `0.0.0` and `0_0_0` with JSON schema version you want to use.
 
