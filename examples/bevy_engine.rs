@@ -1,4 +1,4 @@
-use bevy::prelude::*;
+use bevy::{prelude::*, window::WindowResolution};
 
 // example rewrite in progress, I'm not using Bevy so welcome
 // assist here.
@@ -7,19 +7,22 @@ use bevy::prelude::*;
 
 fn main() {
     App::new()
-    .insert_resource(WindowDescriptor {
-        title: "title".to_string(),
-        width: 1024.0,
-        height: 768.0,
-        ..Default::default()
-    })
-    .add_plugins(DefaultPlugins)
-    .add_startup_system(setup_camera)
-    .run();
+        .add_plugins(DefaultPlugins.set(WindowPlugin {
+            primary_window: Some(Window {
+                title: "title".to_string(),
+                resolution: WindowResolution::new(1024.0, 768.0),
+                ..default()
+            }),
+            ..default()
+        }))
+        .add_systems(Startup, setup_camera)
+        .run();
 }
 
 fn setup_camera(mut commands: Commands) {
-    let mut camera = OrthographicCameraBundle::new_2d();
-    camera.transform = Transform::from_translation(Vec3::new(0.0, 0.0, 50.0));
-    commands.spawn_bundle(camera);
+    let camera = Camera2d::default();
+    commands.spawn((
+        camera,
+        Transform::from_translation(Vec3::new(0.0, 0.0, 50.0)),
+    ));
 }
