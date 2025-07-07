@@ -1,8 +1,8 @@
 [package]
 name = "ldtk_rust"
-version = "0.6.1"
+version = "0.7.2"
 authors = ["Blake Ellis <blake@colormaria.com>"]
-edition = "2021"
+edition = "2024"
 license = "MIT"
 description = "Use the LDtk 2D level editor to build games in Rust."
 homepage = "https://github.com/estivate/ldtk_rust"
@@ -17,4 +17,4 @@ serde = {version = "1.0", features = ["derive"]}
 serde_json = "1.0"
 
 [dev-dependencies]
-bevy = "0.7.0"
+bevy = "0.16.0"
